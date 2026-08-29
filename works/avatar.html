@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIXEL AVATAR LAB // 像素头像生成器</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff2fd6;--blue:#00e5ff;--purple:#bf5aff;--green:#00ff9c;--yellow:#ffe600;--bg:#000005;--white:#e8e8ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-size:20px;min-height:100vh;}
+.crt{position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:3px solid var(--purple);box-shadow:0 0 20px rgba(191,90,255,.3);}
+.back{font-family:'Press Start 2P';font-size:9px;color:var(--blue);text-decoration:none;border:3px solid var(--blue);padding:9px 12px;text-shadow:0 0 6px var(--blue);transition:all .1s steps(3);}
+.back:hover{background:var(--blue);color:#000;box-shadow:0 0 20px rgba(0,229,255,.9);}
+.title{font-family:'Press Start 2P';font-size:11px;color:var(--pink);text-shadow:0 0 10px var(--pink);letter-spacing:2px;}
+.wrap{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:28px;padding:28px 20px;max-width:1000px;margin:0 auto;}
+/* 画布区 */
+.editor-side{display:flex;flex-direction:column;align-items:center;gap:14px;}
+#board{
+  border:4px solid var(--pink);
+  box-shadow:0 0 0 4px rgba(0,0,0,.9),0 0 30px rgba(255,47,214,.45),inset 0 0 16px rgba(255,47,214,.08);
+  image-rendering:pixelated;background:#05050f;cursor:crosshair;touch-action:none;
+}
+.zoom-hint{font-family:'VT323';color:var(--dim);font-size:17px;}
+/* 工具面板 */
+.panel{
+  width:280px;background:#050510;border:3px solid var(--blue);
+  box-shadow:0 0 24px rgba(0,229,255,.25);
+  padding:18px;
+}
+.panel h3{font-family:'Press Start 2P';font-size:9px;color:var(--blue);text-shadow:0 0 8px var(--blue);margin-bottom:14px;letter-spacing:1px;}
+.color-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:12px;}
+.swatch{width:100%;aspect-ratio:1;border:2px solid rgba(255,255,255,.15);cursor:pointer;transition:all .08s steps(2);}
+.swatch:hover{transform:scale(1.2);}
+.swatch.on{border-color:#fff;box-shadow:0 0 10px rgba(255,255,255,.7);}
+.custom-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.custom-row label{font-family:'Press Start 2P';font-size:7px;color:var(--dim);}
+.custom-row input[type=color]{width:34px;height:26px;border:2px solid var(--blue);background:transparent;cursor:pointer;}
+.custom-row .px-add{font-family:'Press Start 2P';font-size:8px;color:var(--green);background:none;border:2px solid var(--green);padding:7px 9px;cursor:pointer;text-shadow:0 0 6px var(--green);}
+.custom-row .px-add:hover{background:var(--green);color:#000;}
+.opt-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.opt-btn{font-family:'Press Start 2P';font-size:8px;color:var(--purple);background:none;border:2px solid var(--purple);padding:9px 8px;cursor:pointer;text-shadow:0 0 6px var(--purple);flex:1;min-width:70px;transition:all .08s steps(2);}
+.opt-btn:hover{background:var(--purple);color:#000;}
+.opt-btn.on{background:var(--purple);color:#000;}
+.export-row{display:flex;gap:8px;flex-wrap:wrap;}
+.export-btn{font-family:'Press Start 2P';font-size:8px;color:var(--pink);background:none;border:2px solid var(--pink);padding:9px 8px;cursor:pointer;text-shadow:0 0 6px var(--pink);flex:1;min-width:80px;transition:all .08s steps(2);}
+.export-btn:hover{background:var(--pink);color:#000;}
+.export-btn.g{color:var(--green);border-color:var(--green);text-shadow:0 0 6px var(--green);}
+.export-btn.g:hover{background:var(--green);color:#000;}
+.preview-row{display:flex;gap:14px;align-items:flex-end;margin-top:14px;flex-wrap:wrap;}
+.preview-box{text-align:center;}
+.preview-box .lb{font-family:'Press Start 2P';font-size:7px;color:var(--dim);margin-bottom:6px;display:block;}
+.preview-box canvas{image-rendering:pixelated;border:2px solid rgba(255,255,255,.15);background:#05050f;}
+#preview-lg{width:96px;height:96px;}
+#preview-sm{width:32px;height:32px;}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:99;background:#050510;color:var(--green);font-family:'Press Start 2P';font-size:9px;border:2px solid var(--green);padding:11px 20px;box-shadow:0 0 24px rgba(0,255,156,.5);opacity:0;pointer-events:none;transition:opacity .2s;text-shadow:0 0 8px var(--green);}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="crt"></div>
+<div class="topbar">
+  <a class="back" href="../index.html">◀ BACK</a>
+  <div class="title">PIXEL AVATAR LAB</div>
+</div>
+<div class="wrap">
+  <div class="editor-side">
+    <canvas id="board" width="256" height="256"></canvas>
+    <div class="zoom-hint">左键上色 · 右键擦除 · 按住拖动连续绘制</div>
+  </div>
+  <div class="panel">
+    <h3>// 工具 TOOLS</h3>
+    <div class="color-grid" id="color-grid"></div>
+    <div class="custom-row">
+      <label>CUSTOM</label>
+      <input type="color" id="custom-color" value="#ff2fd6">
+      <button class="px-add" onclick="addCustom()">+ADD</button>
+    </div>
+    <div class="opt-row">
+      <button class="opt-btn" id="btn-mirror" onclick="toggleMirror()">对称X</button>
+      <button class="opt-btn" onclick="randomFill()">随机</button>
+      <button class="opt-btn" onclick="clearBoard()">清空</button>
+    </div>
+    <h3>// 导出 EXPORT</h3>
+    <div class="export-row">
+      <button class="export-btn" onclick="exportPNG()">PNG</button>
+      <button class="export-btn g" onclick="copyData()">复制数据</button>
+    </div>
+    <div class="preview-row">
+      <div class="preview-box"><span class="lb">LARGE</span><canvas id="preview-lg" width="96" height="96"></canvas></div>
+      <div class="preview-box"><span class="lb">SMALL</span><canvas id="preview-sm" width="32" height="32"></canvas></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const BOARD = 16, CELL = 16;
+const cv = document.getElementById('board');
+const ctx = cv.getContext('2d');
+
+const BASE = ['#000000','#1a1a2e','#3a3a5c','#e8e8ff','#ffffff','#ff2fd6','#ff77e6','#00e5ff','#00b8d9','#bf5aff','#d9a8ff','#00ff9c','#39ff14','#ffe600','#ffd2a8','#e0a878'];
+let palette = BASE.slice();
+let curColor = '#ff2fd6';
+let mirror = false;
+let pixels = new Array(256).fill('#000000');
+let drawing = false;
+let erase = false;
+
+function renderGrid(){
+  for(let y=0;y<BOARD;y++) for(let x=0;x<BOARD;x++){
+    ctx.fillStyle = pixels[y*BOARD+x];
+    ctx.fillRect(x*CELL,y*CELL,CELL,CELL);
+    ctx.fillStyle = 'rgba(255,255,255,.04)';
+    ctx.strokeStyle = 'rgba(255,255,255,.06)';
+    ctx.strokeRect(x*CELL+.5,y*CELL+.5,CELL,CELL);
+  }
+  updatePreviews();
+}
+function updatePreviews(){
+  const lg = document.getElementById('preview-lg').getContext('2d');
+  const sm = document.getElementById('preview-sm').getContext('2d');
+  [lg, sm].forEach((c, i)=>{
+    const s = i===0 ? 6 : 2;
+    for(let y=0;y<BOARD;y++) for(let x=0;x<BOARD;x++){
+      c.fillStyle = pixels[y*BOARD+x];
+      c.fillRect(x*s,y*s,s,s);
+    }
+  });
+}
+function setPixel(x,y,c){
+  if(x<0||x>15||y<0||y>15) return;
+  pixels[y*BOARD+x] = c;
+  if(mirror) pixels[y*BOARD+(15-x)] = c;
+}
+
+/* 颜色板 */
+function buildGrid(){
+  const g = document.getElementById('color-grid');
+  g.innerHTML = '';
+  palette.forEach((c,i)=>{
+    const d = document.createElement('div');
+    d.className = 'swatch' + (c===curColor?' on':'');
+    d.style.background = c;
+    d.onclick = ()=>{ curColor = c; document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('on')); d.classList.add('on'); };
+    g.appendChild(d);
+  });
+}
+function addCustom(){
+  const c = document.getElementById('custom-color').value;
+  if(palette.includes(c)){ toast('颜色已存在'); return; }
+  palette.unshift(c);
+  if(palette.length>24) palette.pop();
+  buildGrid();
+  toast('自定义颜色已加入');
+}
+
+/* 绘制交互 */
+function pos(e){
+  const r = cv.getBoundingClientRect();
+  const sx = (e.clientX-r.left) * (cv.width/r.width);
+  const sy = (e.clientY-r.top) * (cv.height/r.height);
+  return { x: Math.floor(sx/CELL), y: Math.floor(sy/CELL) };
+}
+cv.addEventListener('mousedown', e=>{
+  e.preventDefault();
+  erase = e.button===2;
+  drawing = true;
+  const p = pos(e);
+  setPixel(p.x, p.y, erase ? '#000000' : curColor);
+  renderGrid();
+});
+cv.addEventListener('mousemove', e=>{
+  if(!drawing) return;
+  const p = pos(e);
+  setPixel(p.x, p.y, erase ? '#000000' : curColor);
+  renderGrid();
+});
+cv.addEventListener('mouseup', ()=>drawing=false);
+cv.addEventListener('mouseleave', ()=>drawing=false);
+cv.addEventListener('contextmenu', e=>e.preventDefault());
+// 触屏支持
+cv.addEventListener('touchstart', e=>{ e.preventDefault(); const t=e.touches[0]; drawing=true; erase=false; const p=pos(t); setPixel(p.x,p.y,curColor); renderGrid(); }, {passive:false});
+cv.addEventListener('touchmove', e=>{ e.preventDefault(); const t=e.touches[0]; const p=pos(t); setPixel(p.x,p.y,curColor); renderGrid(); }, {passive:false});
+cv.addEventListener('touchend', ()=>drawing=false);
+
+/* 工具 */
+function toggleMirror(){
+  mirror = !mirror;
+  document.getElementById('btn-mirror').classList.toggle('on', mirror);
+  toast(mirror ? 'X 轴对称已开启' : 'X 轴对称已关闭');
+}
+function randomFill(){
+  for(let i=0;i<256;i++){
+    pixels[i] = Math.random()<.25 ? palette[Math.floor(Math.random()*palette.length)] : '#000000';
+  }
+  // 随机生成一个人物轮廓
+  drawRandomFace();
+  renderGrid();
+  toast('随机头像已生成');
+}
+function drawRandomFace(){
+  const R = ()=>palette[Math.floor(Math.random()*palette.length)];
+  const skin = R();
+  // 头
+  for(let y=2;y<=13;y++) for(let x=4;x<=11;x++){
+    if(x>=5&&x<=10&&y>=3&&y<=12) pixels[y*16+x]=skin;
+  }
+  // 头发
+  for(let x=4;x<=11;x++){ pixels[2*16+x]=R(); pixels[3*16+x]=R(); pixels[4*16+x]=R(); }
+  // 眼睛
+  pixels[6*16+5]='#000000'; pixels[6*16+10]='#000000';
+  pixels[7*16+5]='#000000'; pixels[7*16+10]='#000000';
+  // 嘴
+  for(let x=6;x<=9;x++) pixels[11*16+x]='#ff2fd6';
+}
+function clearBoard(){
+  pixels.fill('#000000');
+  renderGrid();
+  toast('画板已清空');
+}
+
+/* 导出 */
+function exportPNG(){
+  const out = document.createElement('canvas');
+  out.width = 256; out.height = 256;
+  const oc = out.getContext('2d');
+  oc.imageSmoothingEnabled = false;
+  for(let y=0;y<BOARD;y++) for(let x=0;x<BOARD;x++){
+    oc.fillStyle = pixels[y*BOARD+x];
+    oc.fillRect(x*16,y*16,16,16);
+  }
+  const a = document.createElement('a');
+  a.download = 'pixel-avatar.png';
+  a.href = out.toDataURL('image/png');
+  a.click();
+  toast('PNG 已导出');
+}
+function copyData(){
+  const data = pixels.join(',');
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(data).then(()=>toast('像素数据已复制，可粘贴到主页管理后台'), ()=>fallbackCopy(data));
+  }else fallbackCopy(data);
+}
+function fallbackCopy(t){
+  const ta = document.createElement('textarea');
+  ta.value = t; document.body.appendChild(ta); ta.select();
+  document.execCommand('copy'); ta.remove();
+  toast('像素数据已复制');
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = '// ' + msg + ' //';
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=>t.classList.remove('show'), 1600);
+}
+
+buildGrid();
+renderGrid();
+</script>
+</body>
+</html>

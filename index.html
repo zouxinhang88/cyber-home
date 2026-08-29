@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>邹忻航 // CYBER PIXEL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CYBER PIXEL 16-BIT 赛博朋克像素风个人主页
+   ============================================================ */
+:root{
+  --bg:#000005;
+  --bg2:#05050f;
+  --pink:#ff2fd6;
+  --blue:#00e5ff;
+  --purple:#bf5aff;
+  --green:#00ff9c;
+  --yellow:#ffe600;
+  --white:#e8e8ff;
+  --dim:#6b6b9a;
+  --font-px:'Press Start 2P', monospace;
+  --font-term:'VT323', 'Courier New', monospace;
+  --px:4px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:var(--font-term);
+  font-size:20px;
+  overflow-x:hidden;
+  line-height:1.5;
+  image-rendering:pixelated;
+}
+
+/* ---------- 像素工具类 ---------- */
+.px-border{
+  border:var(--px) solid transparent;
+  box-shadow:0 0 0 var(--px) var(--blue), 0 0 18px rgba(0,229,255,.35), inset 0 0 12px rgba(0,229,255,.08);
+  clip-path:polygon(0 var(--px),var(--px) var(--px),var(--px) 0,calc(100% - var(--px)) 0,calc(100% - var(--px)) var(--px),100% var(--px),100% calc(100% - var(--px)),calc(100% - var(--px)) calc(100% - var(--px)),calc(100% - var(--px)) 100%,var(--px) 100%,var(--px) calc(100% - var(--px)),0 calc(100% - var(--px)));
+}
+.px-border-pink{box-shadow:0 0 0 var(--px) var(--pink), 0 0 18px rgba(255,47,214,.4), inset 0 0 12px rgba(255,47,214,.08);}
+.px-border-purple{box-shadow:0 0 0 var(--px) var(--purple), 0 0 18px rgba(191,90,255,.4), inset 0 0 12px rgba(191,90,255,.08);}
+.px-border-green{box-shadow:0 0 0 var(--px) var(--green), 0 0 18px rgba(0,255,156,.4), inset 0 0 12px rgba(0,255,156,.08);}
+
+/* ---------- 背景层 ---------- */
+#matrix-canvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  z-index:0;opacity:.5;pointer-events:none;
+}
+.crt-overlay{
+  position:fixed;inset:0;z-index:50;pointer-events:none;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);
+  mix-blend-mode:multiply;
+}
+.crt-overlay::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,20,.55) 100%);
+  animation:flicker 4s infinite;
+}
+@keyframes flicker{
+  0%,100%{opacity:.85} 50%{opacity:.95} 53%{opacity:.7} 54%{opacity:.95}
+}
+.scanline-sweep{
+  position:fixed;left:0;right:0;height:120px;z-index:51;pointer-events:none;
+  background:linear-gradient(180deg, transparent, rgba(0,229,255,.05), transparent);
+  animation:sweep 7s linear infinite;
+}
+@keyframes sweep{0%{top:-15%}100%{top:115%}}
+
+/* ---------- 像素电路板纹理 ---------- */
+.circuit-grid{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.22;
+  background-image:
+    linear-gradient(rgba(0,229,255,.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,.18) 1px, transparent 1px),
+    linear-gradient(rgba(191,90,255,.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(191,90,255,.12) 1px, transparent 1px);
+  background-size:80px 80px,80px 80px,16px 16px,16px 16px;
+}
+
+/* ---------- 布局 ---------- */
+.page{
+  position:relative;z-index:2;
+  display:grid;
+  grid-template-columns:220px 1fr;
+  min-height:100vh;
+}
+
+/* ============ 左侧竖向霓虹像素导航栏 ============ */
+.nav{
+  position:sticky;top:0;height:100vh;
+  background:linear-gradient(180deg, #070012, #02000a);
+  border-right:var(--px) solid var(--purple);
+  box-shadow:4px 0 24px rgba(191,90,255,.25), inset -8px 0 24px rgba(191,90,255,.06);
+  display:flex;flex-direction:column;
+  padding:24px 14px;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%);
+  z-index:10;
+}
+.nav-logo{
+  font-family:var(--font-px);
+  font-size:13px;line-height:1.8;color:var(--green);
+  text-align:center;padding:10px 4px 16px;
+  text-shadow:0 0 8px var(--green),0 0 20px rgba(0,255,156,.5);
+  border-bottom:2px dashed rgba(0,255,156,.35);
+  margin-bottom:18px;
+  animation:logo-blink 2.4s steps(2) infinite;
+}
+@keyframes logo-blink{0%,100%{opacity:1}50%{opacity:.55}}
+.nav-logo .tag{color:var(--purple);text-shadow:0 0 8px var(--purple);}
+.nav-list{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;}
+.nav-item{}
+.nav-link{
+  display:block;text-decoration:none;
+  font-family:var(--font-px);font-size:11px;color:var(--white);
+  padding:12px 10px;position:relative;
+  border:2px solid rgba(191,90,255,.25);
+  background:rgba(191,90,255,.04);
+  transition:all .12s steps(3);
+}
+.nav-link::before{
+  content:'▸';color:var(--pink);margin-right:6px;
+  text-shadow:0 0 6px var(--pink);
+  display:inline-block;transition:transform .12s steps(3);
+}
+.nav-link:hover,.nav-link.active{
+  background:var(--purple);color:#000;
+  box-shadow:0 0 14px rgba(191,90,255,.9), inset 0 0 8px rgba(255,255,255,.5);
+  transform:translateX(4px);
+  border-color:var(--purple);
+}
+.nav-link:hover::before,.nav-link.active::before{transform:translateX(2px);color:#000;text-shadow:none;}
+.nav-link .sub{display:block;font-family:var(--font-term);font-size:13px;opacity:.6;margin-top:3px;letter-spacing:1px;}
+.nav-link:hover .sub,.nav-link.active .sub{opacity:1;color:#000;}
+.nav-footer{
+  font-family:var(--font-px);font-size:8px;color:var(--dim);
+  text-align:center;line-height:2;
+  border-top:2px dashed rgba(255,47,214,.3);
+  padding-top:14px;letter-spacing:1px;
+}
+.nav-footer .pulse-dot{
+  display:inline-block;width:8px;height:8px;background:var(--pink);
+  box-shadow:0 0 8px var(--pink);animation:dot-pulse 1s steps(2) infinite;margin-right:4px;
+}
+@keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ============ 主区域 ============ */
+.main{
+  padding:28px 36px 20px;
+  display:flex;flex-direction:column;gap:44px;
+  min-width:0;
+}
+
+/* ---- 顶部栏：状态 + 头像 ---- */
+.topbar{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+}
+.status-line{
+  font-family:var(--font-px);font-size:9px;color:var(--dim);line-height:2.2;
+}
+.status-line .ok{color:var(--green);text-shadow:0 0 6px var(--green);}
+.status-line .warn{color:var(--yellow);text-shadow:0 0 6px var(--yellow);}
+
+/* 像素头像 */
+.avatar-wrap{position:relative;flex-shrink:0;}
+.avatar-frame{
+  width:132px;height:132px;padding:6px;
+  background:#04040c;
+  border:3px solid var(--pink);
+  box-shadow:0 0 0 3px rgba(0,0,0,.9), 0 0 24px rgba(255,47,214,.6), inset 0 0 16px rgba(255,47,214,.2);
+  image-rendering:pixelated;
+  animation:avatar-glow 2.6s steps(4) infinite;
+  position:relative;z-index:2;
+}
+@keyframes avatar-glow{
+  0%,100%{box-shadow:0 0 0 3px rgba(0,0,0,.9),0 0 24px rgba(255,47,214,.6),inset 0 0 16px rgba(255,47,214,.2);}
+  50%{box-shadow:0 0 0 3px rgba(0,0,0,.9),0 0 34px rgba(255,47,214,.95),inset 0 0 24px rgba(255,47,214,.45);}
+}
+.avatar-frame canvas{width:100%;height:100%;display:block;}
+.avatar-corners span{
+  position:absolute;width:14px;height:14px;z-index:3;pointer-events:none;
+  border:3px solid var(--blue);animation:corner-blink 1.4s steps(2) infinite;
+}
+.avatar-corners span:nth-child(1){top:-6px;left:-6px;border-right:none;border-bottom:none;}
+.avatar-corners span:nth-child(2){top:-6px;right:-6px;border-left:none;border-bottom:none;}
+.avatar-corners span:nth-child(3){bottom:-6px;left:-6px;border-right:none;border-top:none;}
+.avatar-corners span:nth-child(4){bottom:-6px;right:-6px;border-left:none;border-top:none;}
+@keyframes corner-blink{0%,100%{opacity:1}50%{opacity:.25}}
+.avatar-label{
+  font-family:var(--font-px);font-size:8px;color:var(--blue);text-align:center;margin-top:10px;
+  text-shadow:0 0 6px var(--blue);letter-spacing:1px;
+  animation:logo-blink 1.8s steps(2) infinite;
+}
+.avatar-upload-btn{
+  margin-top:10px;width:100%;font-size:8px;padding:8px 6px;text-align:center;
+}
+
+/* ---- Hero 简介 ---- */
+.hero{padding:14px 0;}
+.hero-title{
+  font-family:var(--font-px);font-size:clamp(20px, 3.4vw, 38px);
+  color:var(--white);line-height:1.6;margin-bottom:16px;
+  text-shadow:0 0 10px rgba(232,232,255,.5);
+}
+.hero-title .glitch-word{position:relative;display:inline-block;color:var(--pink);text-shadow:0 0 12px var(--pink),0 0 30px rgba(255,47,214,.6);}
+.hero-title .glitch-word::before,.hero-title .glitch-word::after{
+  content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;
+  opacity:.85;pointer-events:none;
+}
+.hero-title .glitch-word::before{
+  color:var(--blue);transform:translate(-2px,-1px);clip-path:inset(0 0 55% 0);animation:glitch-a 3.2s steps(2) infinite;
+}
+.hero-title .glitch-word::after{
+  color:var(--purple);transform:translate(2px,1px);clip-path:inset(55% 0 0 0);animation:glitch-b 2.7s steps(2) infinite;
+}
+@keyframes glitch-a{0%,86%,100%{transform:translate(-2px,-1px)}88%{transform:translate(3px,2px)}90%{transform:translate(-4px,1px)}92%{transform:translate(2px,-2px)}94%{transform:translate(-1px,3px)}}
+@keyframes glitch-b{0%,80%,100%{transform:translate(2px,1px)}82%{transform:translate(-3px,-2px)}84%{transform:translate(4px,-1px)}86%{transform:translate(-2px,2px)}88%{transform:translate(1px,-3px)}}
+
+.hero-code{
+  font-family:var(--font-term);font-size:clamp(17px,2vw,22px);
+  background:rgba(4,4,16,.8);
+  border-left:4px solid var(--green);
+  padding:16px 20px;margin:10px 0 20px;max-width:720px;
+  box-shadow:0 0 20px rgba(0,255,156,.08);
+  white-space:pre-wrap;word-break:break-word;
+  min-height:96px;
+}
+.hero-code .k{color:var(--purple);text-shadow:0 0 6px var(--purple);}
+.hero-code .v{color:var(--green);text-shadow:0 0 6px var(--green);}
+.hero-code .s{color:var(--pink);text-shadow:0 0 6px var(--pink);}
+.hero-code .c{color:var(--dim);}
+.cursor-blink::after{
+  content:'█';color:var(--green);margin-left:2px;
+  animation:cur 1s steps(1) infinite;text-shadow:0 0 8px var(--green);
+}
+@keyframes cur{50%{opacity:0}}
+
+/* 霓虹像素按钮 */
+.btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;}
+.px-btn{
+  font-family:var(--font-px);font-size:10px;color:var(--blue);
+  background:transparent;border:3px solid var(--blue);
+  padding:12px 18px;cursor:pointer;text-decoration:none;display:inline-block;
+  text-shadow:0 0 6px var(--blue);
+  box-shadow:0 0 12px rgba(0,229,255,.25), inset 0 0 8px rgba(0,229,255,.08);
+  transition:all .1s steps(3);position:relative;
+}
+.px-btn:hover{
+  background:var(--blue);color:#000;
+  box-shadow:0 0 24px rgba(0,229,255,.9), inset 0 0 10px rgba(255,255,255,.6);
+  transform:translateY(-2px);
+}
+.px-btn:active{transform:translateY(1px);}
+.px-btn.pink{color:var(--pink);border-color:var(--pink);text-shadow:0 0 6px var(--pink);box-shadow:0 0 12px rgba(255,47,214,.25),inset 0 0 8px rgba(255,47,214,.08);}
+.px-btn.pink:hover{background:var(--pink);color:#000;box-shadow:0 0 24px rgba(255,47,214,.9);}
+.px-btn.purple{color:var(--purple);border-color:var(--purple);text-shadow:0 0 6px var(--purple);box-shadow:0 0 12px rgba(191,90,255,.25),inset 0 0 8px rgba(191,90,255,.08);}
+.px-btn.purple:hover{background:var(--purple);color:#000;box-shadow:0 0 24px rgba(191,90,255,.9);}
+
+/* ---- 区块标题 ---- */
+.section-title{
+  font-family:var(--font-px);font-size:14px;color:var(--yellow);
+  text-shadow:0 0 8px var(--yellow),0 0 20px rgba(255,230,0,.35);
+  margin-bottom:20px;letter-spacing:2px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-title::before{content:'▚▞';color:var(--pink);text-shadow:0 0 8px var(--pink);font-size:12px;}
+.section-title::after{
+  content:'';flex:1;height:3px;background:
+    repeating-linear-gradient(90deg, var(--pink) 0 10px, transparent 10px 20px);
+  opacity:.55;
+}
+
+/* ---- 作品网格 ---- */
+.works-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;
+}
+.work-card{
+  position:relative;background:var(--bg2);
+  border:2px solid rgba(0,229,255,.2);
+  padding:0 0 14px;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:transform .12s steps(4), box-shadow .12s steps(4);
+  cursor:pointer;overflow:hidden;
+}
+.work-card::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(90deg, transparent 0, rgba(0,229,255,.05) 50%, transparent 100%);
+  transform:translateX(-100%);
+  animation:card-shine 5.5s ease-in-out infinite;
+}
+@keyframes card-shine{0%,60%,100%{transform:translateX(-100%)}75%,90%{transform:translateX(100%)}}
+.work-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 0 2px var(--pink), 0 0 26px rgba(255,47,214,.5), inset 0 0 20px rgba(255,47,214,.08);
+  border-color:var(--pink);
+}
+.work-card .thumb{
+  height:120px;margin:0;background:#040410;
+  border-bottom:2px dashed rgba(0,229,255,.25);
+  position:relative;z-index:1;overflow:hidden;
+}
+.work-card .thumb canvas{width:100%;height:100%;display:block;}
+.work-card .tag{
+  position:absolute;top:8px;left:8px;z-index:2;
+  font-family:var(--font-px);font-size:7px;color:#000;
+  background:var(--green);padding:4px 6px;
+  box-shadow:0 0 10px rgba(0,255,156,.7);
+  letter-spacing:1px;
+}
+.work-card .tag.b{background:var(--blue);box-shadow:0 0 10px rgba(0,229,255,.7);}
+.work-card .tag.p{background:var(--pink);box-shadow:0 0 10px rgba(255,47,214,.7);}
+.work-card .info{padding:12px 14px 4px;position:relative;z-index:1;}
+.work-card .name{
+  font-family:var(--font-px);font-size:10px;color:var(--white);
+  margin-bottom:8px;text-shadow:0 0 6px rgba(232,232,255,.4);
+}
+.work-card .desc{font-family:var(--font-term);font-size:17px;color:var(--dim);line-height:1.4;}
+.work-card .desc .hl{color:var(--green);}
+.work-card .desc .hl2{color:var(--pink);}
+.card-enter{padding:8px 14px 4px;position:relative;z-index:1;}
+.enter-btn{
+  display:inline-block;font-family:var(--font-px);font-size:8px;
+  color:var(--green);border:2px solid var(--green);padding:8px 10px;
+  text-decoration:none;letter-spacing:1px;text-shadow:0 0 6px var(--green);
+  box-shadow:0 0 10px rgba(0,255,156,.2);transition:all .1s steps(3);
+}
+.enter-btn:hover{background:var(--green);color:#000;box-shadow:0 0 18px rgba(0,255,156,.8);}
+
+/* ---- 底部像素数据流装饰条 ---- */
+.data-stream{
+  margin-top:8px;position:relative;
+  height:58px;overflow:hidden;
+  border-top:3px solid var(--green);
+  border-bottom:3px solid var(--green);
+  box-shadow:0 0 18px rgba(0,255,156,.3), inset 0 0 24px rgba(0,255,156,.06);
+  background:linear-gradient(180deg,#02080a,#000005);
+  display:flex;align-items:center;
+}
+.stream-canvas{width:100%;height:100%;display:block;}
+.stream-label{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-px);font-size:9px;color:#000;background:var(--green);
+  padding:6px 8px;letter-spacing:1px;box-shadow:0 0 14px rgba(0,255,156,.8);
+  animation:logo-blink 2s steps(2) infinite;z-index:2;
+}
+
+/* ---- 页脚 ---- */
+.footer{
+  font-family:var(--font-px);font-size:8px;color:var(--dim);
+  text-align:center;padding:10px 0 6px;letter-spacing:2px;line-height:2;
+}
+.footer .hack{
+  color:var(--pink);cursor:pointer;user-select:none;
+}
+.footer .hack:hover{text-shadow:0 0 8px var(--pink);}
+
+/* ============ 管理后台 ============ */
+.admin-overlay{
+  position:fixed;inset:0;z-index:100;display:none;
+  background:rgba(0,0,5,.92);
+  backdrop-filter:blur(2px);
+  justify-content:center;align-items:center;
+}
+.admin-overlay.show{display:flex;animation:fadein .15s steps(4);}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.admin-panel{
+  width:min(680px,92vw);max-height:88vh;overflow-y:auto;
+  background:#050510;padding:28px;
+  border:3px solid var(--purple);
+  box-shadow:0 0 0 3px rgba(0,0,0,.9),0 0 40px rgba(191,90,255,.5), inset 0 0 30px rgba(191,90,255,.06);
+}
+.admin-panel h2{
+  font-family:var(--font-px);font-size:14px;color:var(--purple);
+  text-shadow:0 0 10px var(--purple);
+  margin-bottom:18px;letter-spacing:2px;
+}
+.admin-panel h2 span{color:var(--green);text-shadow:0 0 10px var(--green);}
+.admin-close{
+  position:sticky;top:-28px;float:right;margin:-10px -10px 0 0;
+  font-family:var(--font-px);font-size:11px;color:var(--pink);
+  background:none;border:2px solid var(--pink);padding:8px 10px;cursor:pointer;
+  box-shadow:0 0 10px rgba(255,47,214,.3);
+}
+.admin-close:hover{background:var(--pink);color:#000;}
+.admin-form{display:flex;flex-direction:column;gap:14px;clear:both;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{
+  font-family:var(--font-px);font-size:9px;color:var(--blue);
+  text-shadow:0 0 6px var(--blue);letter-spacing:1px;
+}
+.field input,.field textarea{
+  background:#01010a;border:2px solid rgba(0,229,255,.35);
+  color:var(--white);font-family:var(--font-term);font-size:20px;
+  padding:10px 12px;outline:none;resize:vertical;
+  transition:all .1s steps(3);
+}
+.field input:focus,.field textarea:focus{
+  border-color:var(--pink);box-shadow:0 0 14px rgba(255,47,214,.4);
+}
+.upload-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.px-check{
+  font-family:var(--font-px);font-size:8px;color:var(--green);
+  display:flex;align-items:center;gap:6px;cursor:pointer;
+  text-shadow:0 0 6px var(--green);letter-spacing:1px;
+}
+.px-check input{accent-color:var(--green);width:14px;height:14px;cursor:pointer;}
+.upload-preview{display:flex;align-items:center;gap:14px;margin-top:8px;flex-wrap:wrap;}
+.upload-preview canvas{
+  width:132px;height:132px;image-rendering:pixelated;
+  border:2px solid rgba(255,47,214,.5);
+  box-shadow:0 0 16px rgba(255,47,214,.3);
+  background:#01010a;
+}
+.upload-hint{font-family:var(--font-term);font-size:16px;color:var(--dim);line-height:1.5;max-width:300px;}
+.admin-actions{display:flex;gap:14px;margin-top:8px;}
+.admin-actions .px-btn{flex:1;text-align:center;}
+
+/* 登录弹窗 */
+.login-box{
+  width:min(360px,92vw);background:#050510;padding:30px;
+  border:3px solid var(--blue);
+  box-shadow:0 0 0 3px rgba(0,0,0,.9),0 0 40px rgba(0,229,255,.5);
+  text-align:center;
+}
+.login-box h3{
+  font-family:var(--font-px);font-size:12px;color:var(--blue);
+  text-shadow:0 0 10px var(--blue);margin-bottom:20px;letter-spacing:2px;
+}
+.login-box input{
+  width:100%;background:#01010a;border:2px solid rgba(0,229,255,.4);
+  color:var(--white);font-family:var(--font-term);font-size:24px;
+  text-align:center;padding:12px;outline:none;margin-bottom:16px;
+  letter-spacing:8px;
+}
+.login-box input:focus{border-color:var(--pink);box-shadow:0 0 14px rgba(255,47,214,.4);}
+.login-err{
+  font-family:var(--font-px);font-size:9px;color:var(--pink);
+  text-shadow:0 0 8px var(--pink);min-height:18px;margin-bottom:10px;
+}
+.login-box .px-btn{width:100%;text-align:center;}
+
+/* 提示 toast */
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  z-index:200;background:#050510;color:var(--green);
+  font-family:var(--font-px);font-size:10px;letter-spacing:1px;
+  border:2px solid var(--green);padding:12px 22px;
+  box-shadow:0 0 24px rgba(0,255,156,.5);
+  opacity:0;pointer-events:none;transition:opacity .2s;
+  text-shadow:0 0 8px var(--green);
+}
+.toast.show{opacity:1;}
+
+/* 响应式 */
+@media (max-width:860px){
+  .page{grid-template-columns:1fr;}
+  .nav{
+    position:relative;height:auto;flex-direction:row;align-items:center;
+    padding:12px;border-right:none;border-bottom:3px solid var(--purple);
+    clip-path:none;flex-wrap:wrap;
+  }
+  .nav-logo{margin:0 12px 0 0;padding:0;border:none;}
+  .nav-list{flex-direction:row;flex-wrap:wrap;gap:8px;}
+  .nav-link{font-size:9px;padding:8px;transform:none;}
+  .nav-footer{display:none;}
+  .main{padding:20px 16px;}
+  .topbar{flex-direction:column-reverse;align-items:flex-start;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- 背景：数字雨 -->
+<canvas id="matrix-canvas"></canvas>
+<div class="circuit-grid"></div>
+<div class="crt-overlay"></div>
+<div class="scanline-sweep"></div>
+
+<div class="page">
+
+  <!-- ======== 左侧竖向霓虹像素导航栏 ======== -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">
+      <span class="tag">&lt;CYBER/&gt;</span><br>ZXH.10
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item"><a class="nav-link" href="#home" data-idx="0">首页<span class="sub">// HOME</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#about" data-idx="1">档案<span class="sub">// PROFILE</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#works" data-idx="2">作品<span class="sub">// WORKS</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#stream" data-idx="3">数据<span class="sub">// DATA</span></a></li>
+    </ul>
+    <div class="nav-footer">
+      <span class="pulse-dot"></span>SYS ONLINE<br>
+      v2.0.16-BIT
+    </div>
+  </nav>
+
+  <!-- ======== 主区域 ======== -->
+  <main class="main" id="home">
+
+    <!-- 顶部栏 -->
+    <div class="topbar">
+      <div class="status-line">
+        &gt; 系统状态: <span class="ok">■ ONLINE</span><br>
+        &gt; 神经链接: <span class="ok">■ 稳定</span><br>
+        &gt; 位置: <span class="ok">■ 江苏·徐州</span><br>
+        &gt; 时间: <span id="clock" class="warn">--:--:--</span>
+      </div>
+      <div class="avatar-wrap">
+        <div class="avatar-frame"><canvas id="avatar-canvas" width="16" height="16"></canvas></div>
+        <div class="avatar-corners"><span></span><span></span><span></span><span></span></div>
+        <div class="avatar-label">[ USER_ZXH ]</div>
+        <button class="px-btn avatar-upload-btn" onclick="openUploadAvatar()">&#11014; 上传头像</button>
+      </div>
+    </div>
+
+    <!-- Hero 简介 -->
+    <section class="hero" id="about">
+      <h1 class="hero-title">
+        HELLO, 我是 <span class="glitch-word" data-text="邹忻航" id="glitch-name">邹忻航</span>
+      </h1>
+      <div class="hero-code" id="profile-code">
+<span class="c"># include &lt;cyber_person&gt;</span>
+<span class="k">const</span> <span class="v">cyber_user</span> = {
+  <span class="k">name</span>    : <span class="s">"邹忻航"</span>,
+  <span class="k">age</span>     : <span class="s">10</span>,
+  <span class="k">location</span>: <span class="s">"江苏徐州"</span>,
+  <span class="k">power</span>   : <span class="s">"好奇心 × 想象力"</span>,
+  <span class="k">status</span>  : <span class="s">"⚡ 正在加载梦想..."</span>
+};<span class="cursor-blink"></span>
+      </div>
+      <div class="btn-row">
+        <a class="px-btn" href="#works">进入作品区</a>
+        <a class="px-btn pink" href="mailto:zxh@cyber.pixel">联系我</a>
+        <button class="px-btn purple" onclick="openAdmin()">管理</button>
+      </div>
+    </section>
+
+    <!-- 作品区 -->
+    <section id="works">
+      <h2 class="section-title">作品矩阵 / WORKS</h2>
+      <div class="works-grid" id="works-grid"></div>
+    </section>
+
+    <!-- 底部像素数据流装饰条 -->
+    <section id="stream" class="data-stream">
+      <canvas class="stream-canvas" id="stream-canvas"></canvas>
+      <div class="stream-label">DATA FLOW</div>
+    </section>
+
+    <footer class="footer">
+      © 2026 <span class="hack" title="">邹忻航</span> // MADE WITH PIXELS & NEON<br>
+      <span class="hack" onclick="openLogin()" id="secret-entry">░░▒▒▓▓ CYBER SYSTEM ▓▓▒▒░░</span>
+    </footer>
+  </main>
+</div>
+
+<!-- ======== 登录弹窗 ======== -->
+<div class="admin-overlay" id="login-overlay">
+  <div class="login-box">
+    <h3>// ACCESS CONTROL //</h3>
+    <input type="password" id="login-pass" placeholder="******" maxlength="12" autocomplete="off">
+    <div class="login-err" id="login-err"></div>
+    <button class="px-btn" onclick="doLogin()">验证身份</button>
+  </div>
+</div>
+
+<!-- ======== 管理后台 ======== -->
+<div class="admin-overlay" id="admin-overlay">
+  <div class="admin-panel">
+    <h2>ADMIN <span>// 控制台</span></h2>
+    <button class="admin-close" onclick="closeAdmin()">✕</button>
+    <div class="admin-form">
+      <div class="field">
+        <label>姓名 NAME</label>
+        <input type="text" id="adm-name" maxlength="20">
+      </div>
+      <div class="field">
+        <label>年龄 AGE</label>
+        <input type="number" id="adm-age" min="1" max="99">
+      </div>
+      <div class="field">
+        <label>地址 LOCATION</label>
+        <input type="text" id="adm-loc" maxlength="40">
+      </div>
+      <div class="field">
+        <label>个人简介 PROFILE（支持 {name} {age} {location} 占位符）</label>
+        <textarea id="adm-bio" rows="5"></textarea>
+      </div>
+      <div class="field">
+        <label>头像像素数据（16x16 颜色代码，用逗号分隔，可选）</label>
+        <textarea id="adm-avatar" rows="3" placeholder="留空则使用默认头像" oninput="renderAdminAvatarPreview()"></textarea>
+      </div>
+      <div class="field">
+        <label>上传头像 UPLOAD（自动像素风滤镜）</label>
+        <div class="upload-row">
+          <button class="px-btn" type="button" onclick="document.getElementById('avatar-file').click()">选择图片</button>
+          <label class="px-check"><input type="checkbox" id="avatar-quantize" checked> 霓虹量化滤镜</label>
+        </div>
+        <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+        <div class="upload-preview">
+          <canvas id="avatar-preview-canvas" width="256" height="256"></canvas>
+          <div class="upload-hint">16×16 像素化预览 · 点「保存配置」后主页头像同步更新</div>
+        </div>
+      </div>
+      <div class="admin-actions">
+        <button class="px-btn" onclick="saveAdmin()">保存配置</button>
+        <button class="px-btn pink" onclick="resetData()">恢复默认</button>
+        <button class="px-btn purple" onclick="closeAdmin()">退出后台</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   核心数据（localStorage 持久化）
+   ============================================================ */
+const DEFAULT_DATA = {
+  name:'邹忻航',
+  age:'10',
+  location:'江苏徐州',
+  bio:'',
+  avatar:'' // 16x16 像素数据，逗号分隔颜色值
+};
+const STORAGE_KEY = 'cyber_zxh_data_v1';
+const ADMIN_PASS = '201052';
+
+let DATA = loadData();
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ const d = JSON.parse(raw); return Object.assign({}, DEFAULT_DATA, d); }
+  }catch(e){}
+  return Object.assign({}, DEFAULT_DATA);
+}
+function persistData(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
+}
+
+/* ============================================================
+   默认 16x16 像素头像（邹忻航 · 像素风少年）
+   ============================================================ */
+function defaultAvatar(){
+  const c = {
+    B:'#000000', P:'#ff2fd6', p:'#ff77e6', U:'#bf5aff', u:'#d9a8ff',
+    W:'#e8e8ff', S:'#ffd2a8', s:'#e0a878', E:'#00e5ff', G:'#00ff9c',
+    N:'#3a3a5c', Y:'#ffe600'
+  };
+  // 16 行 × 16 列，逐行字符串，'.'=黑
+  const rows = [
+    '................',
+    '....BBBBBBBB....',
+    '...BBBBBBBBBB...',
+    '..BBSSSSSSSSBB..',
+    '..BSSSSSSSSSSB..',
+    '..BSSSSSSSSSSB..',
+    '..BSSSSSSSSSSB..',
+    '..BBSSSSSSSSBB..',
+    '..BBBBSSSSBBBB..',
+    '..BWWBBSSBBWWB..',
+    '..BWWBBSSBBWWB..',
+    '..BBBBBBBBBBBB..',
+    '...BBBBBBBBBB...',
+    '...BBBBBBBBBB...',
+    '..BBBBBBBBBBBB..',
+    '................'
+  ];
+  const out = [];
+  for(const r of rows){
+    for(const ch of r){ out.push(ch === '.' ? c.B : c[ch] || c.B); }
+  }
+  return out.join(',');
+}
+
+/* ============================================================
+   渲染：像素头像
+   ============================================================ */
+function renderAvatar(){
+  const cv = document.getElementById('avatar-canvas');
+  const ctx = cv.getContext('2d');
+  const colors = (DATA.avatar && DATA.avatar.split(',').length === 256)
+    ? DATA.avatar.split(',')
+    : defaultAvatar().split(',');
+  ctx.clearRect(0,0,16,16);
+  for(let y=0;y<16;y++){
+    for(let x=0;x<16;x++){
+      ctx.fillStyle = colors[y*16+x] || '#000';
+      ctx.fillRect(x,y,1,1);
+    }
+  }
+}
+
+/* ============================================================
+   渲染：代码风格简介（支持占位符与自动换行）
+   ============================================================ */
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderProfile(){
+  const name = esc(DATA.name), age = esc(DATA.age), loc = esc(DATA.location);
+  document.getElementById('glitch-name').textContent = DATA.name;
+  document.getElementById('glitch-name').setAttribute('data-text', DATA.name);
+  document.querySelector('.status-line').innerHTML =
+    '&gt; 系统状态: <span class="ok">■ ONLINE</span><br>' +
+    '&gt; 神经链接: <span class="ok">■ 稳定</span><br>' +
+    '&gt; 位置: <span class="ok">■ ' + loc + '</span><br>' +
+    '&gt; 时间: <span id="clock" class="warn">--:--:--</span>';
+  document.querySelector('.avatar-label').textContent = '[ USER_' + name.toUpperCase() + ' ]';
+  document.querySelector('.footer .hack').textContent = name;
+
+  // 自定义简介：替换占位符；为空则用默认模板
+  let bio = DATA.bio || '';
+  let body;
+  if(bio.trim()){
+    body = esc(bio)
+      .replace(/\{name\}/g,'<span class="s">'+name+'</span>')
+      .replace(/\{age\}/g,'<span class="s">'+age+'</span>')
+      .replace(/\{location\}/g,'<span class="s">'+loc+'</span>')
+      .split('\n').join('<br>');
+  }else{
+    body =
+      '<span class="c"># include &lt;cyber_person&gt;</span><br>' +
+      '<span class="k">const</span> <span class="v">cyber_user</span> = {<br>' +
+      '&nbsp;&nbsp;<span class="k">name</span>&nbsp;&nbsp;&nbsp;&nbsp;: <span class="s">"'+name+'"</span>,<br>' +
+      '&nbsp;&nbsp;<span class="k">age</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="s">'+age+'</span>,<br>' +
+      '&nbsp;&nbsp;<span class="k">location</span>: <span class="s">"'+loc+'"</span>,<br>' +
+      '&nbsp;&nbsp;<span class="k">power</span>&nbsp;&nbsp;&nbsp;: <span class="s">"好奇心 × 想象力"</span>,<br>' +
+      '&nbsp;&nbsp;<span class="k">status</span>&nbsp;&nbsp;: <span class="s">"⚡ 正在加载梦想..."</span><br>' +
+      '};<span class="cursor-blink"></span>';
+  }
+  document.getElementById('profile-code').innerHTML = body;
+}
+
+/* ============================================================
+   作品网格（canvas 生成像素缩略图 + 描述）
+   ============================================================ */
+const WORKS = [
+  { tag:'GAME', tagCls:'', name:'像素冒险', desc:'16-bit 像素闯关，收集霓虹宝石，躲避巡逻敌人。', seed:11, palette:['#ff2fd6','#00e5ff','#bf5aff','#00ff9c','#ffe600'], link:'works/game.html' },
+  { tag:'APP', tagCls:'b', name:'霓虹时钟', desc:'全屏像素数字时钟，可切换霓虹主题色。', seed:22, palette:['#00e5ff','#00ff9c','#e8e8ff','#bf5aff'], link:'works/clock.html' },
+  { tag:'ART', tagCls:'p', name:'像素头像生成器', desc:'16×16 像素头像编辑器，导出 PNG 或像素数据。', seed:33, palette:['#ff2fd6','#ff77e6','#d9a8ff','#ffd2a8','#3a3a5c'], link:'works/avatar.html' },
+  { tag:'WEB', tagCls:'', name:'赛博主页', desc:'本站设计解密：CRT + 数字雨 + glitch 是怎么做的。', seed:44, palette:['#bf5aff','#00e5ff','#ff2fd6','#00ff9c'], link:'works/web.html' },
+  { tag:'DEMO', tagCls:'b', name:'数字雨屏保', desc:'沉浸式矩阵雨，速度/颜色/字号全可调。', seed:55, palette:['#00ff9c','#00e5ff','#ffe600','#e8e8ff'], link:'works/rain.html' },
+  { tag:'TOOL', tagCls:'p', name:'像素电路生成器', desc:'随机生成电路板纹理，可调密度与配色并导出。', seed:66, palette:['#00e5ff','#bf5aff','#00ff9c','#ff2fd6','#3a3a5c'], link:'works/circuit.html' }
+];
+
+function seededRand(seed){
+  let s = seed % 2147483647; if(s<=0) s += 2147483646;
+  return function(){ s = s * 16807 % 2147483647; return (s-1)/2147483646; };
+}
+function renderWorkThumb(canvas, seed, palette){
+  const ctx = canvas.getContext('2d');
+  const rand = seededRand(seed);
+  const W = 120, H = 60;
+  canvas.width = W; canvas.height = H;
+  ctx.fillStyle = '#040410'; ctx.fillRect(0,0,W,H);
+  // 像素块 + 发光点
+  for(let i=0;i<90;i++){
+    ctx.fillStyle = palette[Math.floor(rand()*palette.length)];
+    const x = Math.floor(rand()*W), y = Math.floor(rand()*H);
+    const s = 1 + Math.floor(rand()*4);
+    ctx.globalAlpha = .25 + rand()*.75;
+    ctx.fillRect(x,y,s,s);
+  }
+  ctx.globalAlpha = 1;
+  // 边框霓虹
+  ctx.fillStyle = palette[Math.floor(rand()*palette.length)];
+  for(let x=0;x<W;x+=3){ ctx.fillRect(x,0,1,1); ctx.fillRect(x,H-1,1,1); }
+  for(let y=0;y<H;y+=3){ ctx.fillRect(0,y,1,1); ctx.fillRect(W-1,y,1,1); }
+}
+function renderWorks(){
+  const grid = document.getElementById('works-grid');
+  grid.innerHTML = '';
+  WORKS.forEach((w, i) => {
+    const card = document.createElement('div');
+    card.className = 'work-card';
+    card.style.animation = 'fadein .3s steps(4) both';
+    card.style.animationDelay = (i*0.06)+'s';
+    card.innerHTML =
+      '<div class="thumb"><canvas></canvas><span class="tag '+w.tagCls+'">'+w.tag+'</span></div>' +
+      '<div class="info"><div class="name">'+w.name+'</div><div class="desc">'+w.desc+'</div></div>' +
+      '<div class="card-enter"><a class="enter-btn" href="'+w.link+'">ENTER &#9656;</a></div>';
+    card.addEventListener('click', (e)=>{ if(!e.target.closest('a')) location.href = w.link; });
+    grid.appendChild(card);
+    renderWorkThumb(card.querySelector('canvas'), w.seed, w.palette);
+  });
+}
+
+/* ============================================================
+   数字雨（Matrix Rain）
+   ============================================================ */
+(function(){
+  const cv = document.getElementById('matrix-canvas');
+  const ctx = cv.getContext('2d');
+  let cols=[], fontSize=16, w, h;
+  const chars = 'アイウエオカキクケコサシスセソ0123456789ABCDEF<>/{}[]#&$%';
+  function resize(){
+    w = cv.width = window.innerWidth;
+    h = cv.height = window.innerHeight;
+    cols = Array(Math.floor(w/fontSize)).fill(0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  function draw(){
+    ctx.fillStyle = 'rgba(0,0,5,0.12)';
+    ctx.fillRect(0,0,w,h);
+    ctx.font = fontSize+'px monospace';
+    for(let i=0;i<cols.length;i++){
+      const ch = chars[Math.floor(Math.random()*chars.length)];
+      const x = i*fontSize, y = cols[i]*fontSize;
+      // 渐变颜色：绿 / 蓝 / 粉随机
+      const r = Math.random();
+      ctx.fillStyle = r<.15 ? '#ff2fd6' : (r<.4 ? '#00e5ff' : '#00ff9c');
+      ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 6;
+      ctx.fillText(ch, x, y);
+      ctx.shadowBlur = 0;
+      if(y > h && Math.random() > .975) cols[i] = 0;
+      cols[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================================================
+   底部像素数据流
+   ============================================================ */
+(function(){
+  const cv = document.getElementById('stream-canvas');
+  const ctx = cv.getContext('2d');
+  let w,h;
+  function resize(){
+    w = cv.width = cv.clientWidth * devicePixelRatio;
+    h = cv.height = cv.clientHeight * devicePixelRatio;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  let bits = [];
+  for(let i=0;i<42;i++){
+    bits.push({x:Math.random(), y:Math.random(), s:2+Math.random()*8, c:Math.random()});
+  }
+  setInterval(()=>{
+    ctx.fillStyle = '#000005';
+    ctx.fillRect(0,0,w,h);
+    ctx.font = (11*devicePixelRatio)+'px monospace';
+    for(const b of bits){
+      b.y += b.s/w*4;
+      if(b.y > 1.05){ b.y = -0.05; b.x = Math.random(); }
+      const colors = ['#00ff9c','#00e5ff','#ff2fd6','#bf5aff','#e8e8ff'];
+      ctx.fillStyle = colors[Math.floor(b.c*colors.length)];
+      ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 6*devicePixelRatio;
+      ctx.fillText(Math.random()>.5 ? '1':'0', b.x*w, b.y*h);
+      ctx.shadowBlur = 0;
+    }
+  }, 90);
+})();
+
+/* ============================================================
+   时钟 + 导航高亮
+   ============================================================ */
+setInterval(()=>{
+  const el = document.getElementById('clock');
+  if(el){
+    const d = new Date();
+    const p = n => String(n).padStart(2,'0');
+    el.textContent = p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+  }
+}, 1000);
+
+/* 滚动高亮导航 */
+const navLinks = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', ()=>{
+  const pos = window.scrollY + 120;
+  const targets = ['home','about','works','stream'].map(id=>document.getElementById(id));
+  let idx = 0;
+  targets.forEach((t,i)=>{ if(t && t.offsetTop <= pos) idx = i; });
+  navLinks.forEach((l,i)=>l.classList.toggle('active', i===idx));
+});
+
+/* ============================================================
+   管理后台（密码 201052，不在页面公布）
+   ============================================================ */
+const loginOverlay = document.getElementById('login-overlay');
+const adminOverlay = document.getElementById('admin-overlay');
+
+function openLogin(){
+  loginOverlay.classList.add('show');
+  document.getElementById('login-err').textContent = '';
+  setTimeout(()=>document.getElementById('login-pass').focus(), 60);
+}
+function doLogin(){
+  const v = document.getElementById('login-pass').value;
+  if(v === ADMIN_PASS){
+    loginOverlay.classList.remove('show');
+    document.getElementById('login-pass').value = '';
+    fillAdmin();
+    adminOverlay.classList.add('show');
+    if(pendingUpload){
+      pendingUpload = false;
+      setTimeout(()=>document.getElementById('avatar-file').click(), 200);
+    }
+  }else{
+    document.getElementById('login-err').textContent = '// ACCESS DENIED //';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+  }
+}
+function openAdmin(){
+  // 已登录状态直接打开；否则弹登录
+  if(sessionStorage.getItem('cyber_admin_ok') === '1'){
+    fillAdmin(); adminOverlay.classList.add('show');
+  }else{
+    openLogin();
+  }
+}
+function closeAdmin(){
+  adminOverlay.classList.remove('show');
+}
+function fillAdmin(){
+  document.getElementById('adm-name').value = DATA.name;
+  document.getElementById('adm-age').value = DATA.age;
+  document.getElementById('adm-loc').value = DATA.location;
+  document.getElementById('adm-bio').value = DATA.bio || '';
+  document.getElementById('adm-avatar').value = DATA.avatar || '';
+  renderAdminAvatarPreview();
+}
+function saveAdmin(){
+  DATA.name = document.getElementById('adm-name').value.trim() || '邹忻航';
+  DATA.age = document.getElementById('adm-age').value || '10';
+  DATA.location = document.getElementById('adm-loc').value.trim() || '江苏徐州';
+  DATA.bio = document.getElementById('adm-bio').value.trim();
+  DATA.avatar = document.getElementById('adm-avatar').value.trim();
+  sessionStorage.setItem('cyber_admin_ok','1');
+  persistData();
+  renderProfile(); renderAvatar();
+  showToast('// 配置已保存 //');
+  closeAdmin();
+}
+function resetData(){
+  if(!confirm('确认恢复默认配置？当前修改将丢失。')){
+    // 重置前先恢复可编辑区
+    fillAdmin();
+    return;
+  }
+  DATA = Object.assign({}, DEFAULT_DATA);
+  localStorage.removeItem(STORAGE_KEY);
+  persistData();
+  renderProfile(); renderAvatar(); renderAdminAvatarPreview();
+  showToast('// 已恢复默认 //');
+  closeAdmin();
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+/* ============================================================
+   头像上传：像素风滤镜（降采样 16x16 + 霓虹量化）
+   ============================================================ */
+let pendingUpload = false;
+
+function openUploadAvatar(){
+  if(sessionStorage.getItem('cyber_admin_ok') === '1'){
+    fillAdmin(); adminOverlay.classList.add('show');
+    setTimeout(()=>document.getElementById('avatar-file').click(), 200);
+  }else{
+    pendingUpload = true;
+    openLogin();
+  }
+}
+
+const NEON_PALETTE = ['#000000','#1a1a2e','#3a3a5c','#e8e8ff','#ffffff','#ff2fd6','#ff77e6','#00e5ff','#00b8d9','#bf5aff','#d9a8ff','#00ff9c','#39ff14','#ffe600','#ffd2a8','#e0a878'];
+
+function rgbToHex(r,g,b){
+  return '#' + [r,g,b].map(v=>Math.max(0,Math.min(255,v|0)).toString(16).padStart(2,'0')).join('');
+}
+function nearestNeon(r,g,b){
+  let best = NEON_PALETTE[0], bestD = Infinity;
+  for(const c of NEON_PALETTE){
+    const R = parseInt(c.slice(1,3),16), G = parseInt(c.slice(3,5),16), B = parseInt(c.slice(5,7),16);
+    const d = (R-r)*(R-r) + (G-g)*(G-g) + (B-b)*(B-b);
+    if(d < bestD){ bestD = d; best = c; }
+  }
+  return best;
+}
+function handleAvatarUpload(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  const img = new Image();
+  const url = URL.createObjectURL(file);
+  img.onload = ()=>{
+    const size = 16;
+    const cv = document.createElement('canvas');
+    cv.width = size; cv.height = size;
+    const ctx = cv.getContext('2d');
+    const min = Math.min(img.width, img.height);
+    const sx = (img.width - min)/2, sy = (img.height - min)/2;
+    ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
+    const data = ctx.getImageData(0,0,size,size).data;
+    const quantize = document.getElementById('avatar-quantize').checked;
+    const colors = [];
+    for(let i=0;i<size*size;i++){
+      const r = data[i*4], g = data[i*4+1], b = data[i*4+2];
+      colors.push(quantize ? nearestNeon(r,g,b) : rgbToHex(r,g,b));
+    }
+    document.getElementById('adm-avatar').value = colors.join(',');
+    renderAdminAvatarPreview();
+    showToast('// 像素头像已生成，点击保存生效 //');
+    URL.revokeObjectURL(url);
+  };
+  img.onerror = ()=>{ showToast('// 图片读取失败 //'); URL.revokeObjectURL(url); };
+  img.src = url;
+}
+function renderAdminAvatarPreview(){
+  const cv = document.getElementById('avatar-preview-canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const raw = document.getElementById('adm-avatar').value.trim();
+  const colors = raw ? raw.split(',') : defaultAvatar().split(',');
+  ctx.clearRect(0,0,256,256);
+  const cell = 16;
+  for(let y=0;y<16;y++){
+    for(let x=0;x<16;x++){
+      ctx.fillStyle = colors[y*16+x] || '#000';
+      ctx.fillRect(x*cell, y*cell, cell, cell);
+    }
+  }
+}
+
+/* 键盘：Esc 关闭；回车登录 */
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape'){
+    loginOverlay.classList.remove('show');
+    adminOverlay.classList.remove('show');
+  }
+  if(e.key === 'Enter' && loginOverlay.classList.contains('show')){
+    doLogin();
+  }
+});
+
+/* 初始化渲染 */
+renderProfile();
+renderAvatar();
+renderWorks();
+</script>
+</body>
+</html>

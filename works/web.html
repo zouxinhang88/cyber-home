@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBER HOME // 赛博主页解密</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff2fd6;--blue:#00e5ff;--purple:#bf5aff;--green:#00ff9c;--yellow:#ffe600;--bg:#000005;--white:#e8e8ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-size:20px;min-height:100vh;overflow-x:hidden;}
+#rain{position:fixed;inset:0;opacity:.45;z-index:0;pointer-events:none;}
+.crt{position:fixed;inset:0;z-index:40;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 3px);}
+.scan{position:fixed;left:0;right:0;height:100px;z-index:41;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(0,229,255,.04),transparent);animation:sweep 7s linear infinite;}
+@keyframes sweep{0%{top:-15%}100%{top:115%}}
+.topbar{position:relative;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:3px solid var(--purple);box-shadow:0 0 20px rgba(191,90,255,.3);}
+.back{font-family:'Press Start 2P';font-size:9px;color:var(--blue);text-decoration:none;border:3px solid var(--blue);padding:9px 12px;text-shadow:0 0 6px var(--blue);transition:all .1s steps(3);}
+.back:hover{background:var(--blue);color:#000;box-shadow:0 0 20px rgba(0,229,255,.9);}
+.title{font-family:'Press Start 2P';font-size:11px;color:var(--pink);text-shadow:0 0 10px var(--pink);letter-spacing:2px;}
+.hero{position:relative;z-index:10;text-align:center;padding:56px 20px 40px;}
+.hero h1{
+  font-family:'Press Start 2P';font-size:clamp(22px,5.4vw,46px);line-height:1.7;color:var(--white);
+  text-shadow:0 0 14px rgba(232,232,255,.5);
+}
+.hero h1 .glitch{position:relative;display:inline-block;color:var(--pink);text-shadow:0 0 14px var(--pink),0 0 40px rgba(255,47,214,.5);}
+.hero h1 .glitch::before,.hero h1 .glitch::after{
+  content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;opacity:.85;pointer-events:none;
+}
+.hero h1 .glitch::before{color:var(--blue);transform:translate(-3px,-1px);clip-path:inset(0 0 55% 0);animation:ga 3.2s steps(2) infinite;}
+.hero h1 .glitch::after{color:var(--purple);transform:translate(3px,1px);clip-path:inset(55% 0 0 0);animation:gb 2.7s steps(2) infinite;}
+@keyframes ga{0%,86%,100%{transform:translate(-3px,-1px)}88%{transform:translate(4px,2px)}90%{transform:translate(-5px,1px)}92%{transform:translate(3px,-2px)}94%{transform:translate(-2px,3px)}}
+@keyframes gb{0%,80%,100%{transform:translate(3px,1px)}82%{transform:translate(-4px,-2px)}84%{transform:translate(5px,-1px)}86%{transform:translate(-3px,2px)}88%{transform:translate(2px,-3px)}}
+.hero p{font-size:24px;color:var(--dim);margin-top:18px;letter-spacing:2px;}
+.hero p b{color:var(--green);text-shadow:0 0 8px var(--green);}
+.stack{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:10px 20px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;}
+.card{
+  background:#050510;border:3px solid rgba(191,90,255,.3);padding:18px;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:all .1s steps(3);
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 0 0 2px var(--pink),0 0 26px rgba(255,47,214,.4);border-color:var(--pink);}
+.card .icon{font-family:'Press Start 2P';font-size:16px;margin-bottom:12px;display:block;}
+.card .icon.i1{color:var(--pink);text-shadow:0 0 10px var(--pink);}
+.card .icon.i2{color:var(--blue);text-shadow:0 0 10px var(--blue);}
+.card .icon.i3{color:var(--purple);text-shadow:0 0 10px var(--purple);}
+.card .icon.i4{color:var(--green);text-shadow:0 0 10px var(--green);}
+.card .icon.i5{color:var(--yellow);text-shadow:0 0 10px var(--yellow);}
+.card .icon.i6{color:#ff6b35;text-shadow:0 0 10px #ff6b35;}
+.card h3{font-family:'Press Start 2P';font-size:10px;color:var(--white);margin-bottom:10px;letter-spacing:1px;}
+.card p{color:var(--dim);font-size:19px;line-height:1.5;}
+.card p code{color:var(--green);}
+.code-block{position:relative;z-index:10;max-width:900px;margin:0 auto 46px;padding:0 20px;}
+.code-block pre{
+  background:rgba(4,4,16,.9);border-left:4px solid var(--green);padding:18px 22px;
+  font-family:'VT323';font-size:20px;color:var(--white);overflow-x:auto;line-height:1.6;
+  box-shadow:0 0 24px rgba(0,255,156,.08);
+}
+.code-block pre .k{color:var(--purple);} .code-block pre .s{color:var(--pink);} .code-block pre .c{color:var(--dim);} .code-block pre .v{color:var(--green);}
+.footer{position:relative;z-index:10;text-align:center;padding:0 20px 40px;}
+.home-btn{font-family:'Press Start 2P';font-size:11px;color:#000;background:var(--green);border:none;padding:15px 28px;cursor:pointer;text-decoration:none;display:inline-block;box-shadow:0 0 24px rgba(0,255,156,.7);transition:all .1s steps(3);}
+.home-btn:hover{background:var(--pink);box-shadow:0 0 24px rgba(255,47,214,.7);}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<div class="crt"></div>
+<div class="scan"></div>
+<div class="topbar">
+  <a class="back" href="../index.html">◀ BACK</a>
+  <div class="title">CYBER HOME // ABOUT</div>
+</div>
+<div class="hero">
+  <h1>BUILT WITH <span class="glitch" data-text="PIXELS & NEON">PIXELS & NEON</span></h1>
+  <p>本站的<b>赛博朋克</b>效果是怎么做出来的？全部纯前端，零框架，零依赖。</p>
+</div>
+<div class="stack">
+  <div class="card"><span class="icon i1">▚▞</span><h3>像素字体</h3><p>使用 <code>Press Start 2P</code> 与 <code>VT323</code>，16-bit 红白机时代字体，配合 <code>image-rendering:pixelated</code> 保留锯齿质感。</p></div>
+  <div class="card"><span class="icon i2">▣</span><h3>数字雨</h3><p>Canvas 逐帧渲染，字符列沿 Y 轴下落，用 <code>shadowBlur</code> 制造霓虹光晕，透明度叠加形成拖尾。</p></div>
+  <div class="card"><span class="icon i3">◤</span><h3>CRT 扫描线</h3><p>CSS <code>repeating-linear-gradient</code> 叠加 1px 黑线 + 径向暗角 + 扫光条动画，模拟老式显示器。</p></div>
+  <div class="card"><span class="icon i4">≋</span><h3>Glitch 故障</h3><p>伪元素复制文字，用 <code>clip-path</code> 切片 + 错位 <code>translate</code> + <code>steps()</code> 跳跃动画模拟信号故障。</p></div>
+  <div class="card"><span class="icon i5">▦</span><h3>电路纹理</h3><p>多层 <code>linear-gradient</code> 叠加出 16px/80px 双层网格，再叠加霓虹色细线，像 PCB 电路板。</p></div>
+  <div class="card"><span class="icon i6">◈</span><h3>像素裁剪</h3><p><code>clip-path</code> 多边形切角 + 切角边框，让按钮和卡片呈现硬朗的 16-bit 切割边缘。</p></div>
+</div>
+<div class="code-block">
+<pre><span class="c">// 核心配方：暗底 + 霓虹发光 + 像素节奏</span>
+<span class="k">body</span> {
+  background: <span class="v">#000005</span>;
+  color: <span class="v">#e8e8ff</span>;
+}
+<span class="k">.glow</span> {
+  color: <span class="v">#ff2fd6</span>;
+  text-shadow: <span class="v">0 0 12px #ff2fd6</span>, <span class="v">0 0 40px rgba(255,47,214,.5)</span>;
+  animation: <span class="v">blink</span> <span class="s">1s steps(2)</span> infinite;
+}
+<span class="c">// steps() 是像素感的关键：不做平滑插值</span></pre>
+</div>
+<div class="footer">
+  <a class="home-btn" href="../index.html">▶ 返回主页</a>
+</div>
+<script>
+const cv = document.getElementById('rain'), ctx = cv.getContext('2d');
+let w,h,cols=[],fs=16;
+function resize(){ w=cv.width=innerWidth; h=cv.height=innerHeight; cols=Array(Math.floor(w/fs)).fill(0); }
+resize(); addEventListener('resize', resize);
+const chars='アイウエオカキクケコサシスセソ0123456789<>/[]#&$%';
+setInterval(()=>{
+  ctx.fillStyle='rgba(0,0,5,.12)'; ctx.fillRect(0,0,w,h);
+  ctx.font=fs+'px monospace';
+  for(let i=0;i<cols.length;i++){
+    const ch=chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillStyle=Math.random()<.2?'#ff2fd6':(Math.random()<.4?'#00e5ff':'#00ff9c');
+    ctx.shadowColor=ctx.fillStyle; ctx.shadowBlur=6;
+    ctx.fillText(ch,i*fs,cols[i]*fs); ctx.shadowBlur=0;
+    if(cols[i]*fs>h&&Math.random()>.975) cols[i]=0;
+    cols[i]++;
+  }
+},60);
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATRIX RAIN // 数字雨屏保</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#00ff9c;--accent2:#00e5ff;--bg:#000005;--white:#e8e8ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;height:100vh;overflow:hidden;position:relative;}
+#rain{position:fixed;inset:0;z-index:0;}
+.crt{position:fixed;inset:0;z-index:40;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;}
+.back{font-family:'Press Start 2P';font-size:9px;color:var(--accent2);text-decoration:none;border:3px solid var(--accent2);padding:8px 11px;text-shadow:0 0 6px var(--accent2);background:rgba(0,0,5,.6);transition:all .1s steps(3);}
+.back:hover{background:var(--accent2);color:#000;box-shadow:0 0 20px rgba(0,229,255,.9);}
+.title{font-family:'Press Start 2P';font-size:10px;color:var(--accent);text-shadow:0 0 10px var(--accent);letter-spacing:2px;}
+/* 控制面板 */
+.ctrl-panel{
+  position:fixed;left:18px;bottom:18px;z-index:30;width:250px;
+  background:rgba(0,0,5,.82);border:3px solid var(--accent);
+  box-shadow:0 0 24px rgba(0,255,156,.3);padding:16px;transition:transform .15s steps(3);
+}
+.ctrl-panel.collapsed{transform:translateX(calc(-100% - 30px));}
+.ctrl-panel h3{font-family:'Press Start 2P';font-size:8px;color:var(--accent);text-shadow:0 0 8px var(--accent);margin-bottom:12px;letter-spacing:1px;}
+.ctrl-panel .field{margin-bottom:10px;}
+.ctrl-panel label{font-family:'Press Start 2P';font-size:7px;color:var(--dim);display:block;margin-bottom:5px;letter-spacing:1px;}
+.ctrl-panel input[type=range]{width:100%;accent-color:var(--accent);}
+.ctrl-panel select,.ctrl-panel input[type=number]{
+  width:100%;background:#01010a;border:2px solid rgba(0,255,156,.35);color:var(--white);
+  font-family:'VT323';font-size:18px;padding:6px 8px;outline:none;
+}
+.ctrl-panel .val{color:var(--accent);float:right;font-size:15px;}
+.row2{display:flex;gap:8px;}
+.row2 button{flex:1;font-family:'Press Start 2P';font-size:8px;color:var(--accent2);background:none;border:2px solid var(--accent2);padding:9px 6px;cursor:pointer;text-shadow:0 0 6px var(--accent2);transition:all .08s steps(2);}
+.row2 button:hover{background:var(--accent2);color:#000;}
+.toggle-btn{
+  position:fixed;left:18px;bottom:18px;z-index:31;
+  font-family:'Press Start 2P';font-size:9px;color:var(--accent);background:rgba(0,0,5,.85);
+  border:2px solid var(--accent);padding:10px;cursor:pointer;text-shadow:0 0 6px var(--accent);
+  display:none;box-shadow:0 0 16px rgba(0,255,156,.3);
+}
+.full-btn{position:fixed;right:18px;bottom:18px;z-index:30;font-family:'Press Start 2P';font-size:8px;color:var(--accent2);background:rgba(0,0,5,.7);border:2px solid var(--accent2);padding:10px;cursor:pointer;text-shadow:0 0 6px var(--accent2);transition:all .1s steps(3);}
+.full-btn:hover{background:var(--accent2);color:#000;}
+.hint{position:fixed;right:18px;top:60px;z-index:30;font-family:'VT323';font-size:16px;color:var(--dim);pointer-events:none;}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<div class="crt"></div>
+<div class="topbar">
+  <a class="back" href="../index.html">◀ BACK</a>
+  <div class="title">MATRIX RAIN</div>
+</div>
+
+<div class="ctrl-panel" id="panel">
+  <h3>// 控制 CONSOLE</h3>
+  <div class="field">
+    <label>速度 <span class="val" id="v-speed">80</span></label>
+    <input type="range" id="speed" min="10" max="200" value="80">
+  </div>
+  <div class="field">
+    <label>字号 <span class="val" id="v-size">16</span></label>
+    <input type="range" id="fsize" min="8" max="32" value="16">
+  </div>
+  <div class="field">
+    <label>透明度 <span class="val" id="v-alpha">0.85</span></label>
+    <input type="range" id="alpha" min="10" max="100" value="85">
+  </div>
+  <div class="field">
+    <label>颜色</label>
+    <select id="color">
+      <option value="green">霓虹绿</option>
+      <option value="blue">电光蓝</option>
+      <option value="pink">霓虹粉</option>
+      <option value="purple">荧光紫</option>
+      <option value="white">冷白</option>
+      <option value="rainbow">彩虹</option>
+    </select>
+  </div>
+  <div class="row2" style="margin-top:6px;">
+    <button onclick="togglePanel()">隐藏面板</button>
+    <button onclick="resetAll()">重置</button>
+  </div>
+</div>
+<button class="toggle-btn" id="toggle-btn" onclick="togglePanel()">☰ 控制台</button>
+<button class="full-btn" onclick="toggleFull()">FULLSCREEN</button>
+<div class="hint">沉浸模式：点击画布隐藏/显示控制台</div>
+
+<script>
+const cv = document.getElementById('rain'), ctx = cv.getContext('2d');
+let w,h,cols=[],drops=[];
+let speed = 80, fs = 16, alpha = .85, mode = 'green';
+let running = true;
+
+const COLORS = {
+  green:['#00ff9c','#00e5ff','#e8e8ff'],
+  blue:['#00e5ff','#00b8d9','#e8e8ff'],
+  pink:['#ff2fd6','#ff77e6','#e8e8ff'],
+  purple:['#bf5aff','#d9a8ff','#e8e8ff'],
+  white:['#e8e8ff','#9a9ad0','#6b6b9a'],
+  rainbow:['#ff2fd6','#00e5ff','#bf5aff','#00ff9c','#ffe600']
+};
+function resize(){
+  w = cv.width = innerWidth; h = cv.height = innerHeight;
+  resetDrops();
+}
+function resetDrops(){
+  cols = Array(Math.floor(w/fs)).fill(0);
+  drops = cols.map(()=>({ y: Math.random()*h, speed: 1 + Math.random()*3 }));
+}
+resize();
+addEventListener('resize', ()=>{ resize(); });
+
+const chars='アイウエオカキクケコサシスセソ0123456789ABCDEF<>/{}[]#&$%¥';
+function draw(){
+  if(running){
+    ctx.fillStyle = 'rgba(0,0,5,' + (1-alpha) + ')';
+    ctx.fillRect(0,0,w,h);
+    ctx.font = fs+'px monospace';
+    const palette = COLORS[mode];
+    for(let i=0;i<cols.length;i++){
+      const ch = chars[Math.floor(Math.random()*chars.length)];
+      const x = i*fs;
+      const d = drops[i] || {y:0, speed:1};
+      const head = d.y < 0;
+      ctx.fillStyle = palette[Math.floor(Math.random()*palette.length)];
+      ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 8;
+      // 头部更亮
+      if(head){ ctx.fillStyle = '#ffffff'; ctx.shadowColor = '#ffffff'; }
+      ctx.fillText(ch, x, d.y);
+      ctx.shadowBlur = 0;
+      d.y += d.speed * (speed/50);
+      if(d.y > h + fs && Math.random() > .97){ d.y = -fs - Math.random()*h*.5; d.speed = 1 + Math.random()*3; }
+      if(d.y < 0) d.y += d.speed * (speed/50);
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* 控件绑定 */
+function bind(id, fn){ document.getElementById(id).addEventListener('input', fn); }
+bind('speed', e=>{ speed = +e.target.value; document.getElementById('v-speed').textContent = speed; });
+bind('fsize', e=>{
+  fs = +e.target.value; document.getElementById('v-size').textContent = fs;
+  resize();
+});
+bind('alpha', e=>{ alpha = e.target.value/100; document.getElementById('v-alpha').textContent = (alpha).toFixed(2); });
+bind('color', e=>{ mode = e.target.value; });
+
+function togglePanel(){
+  const p = document.getElementById('panel');
+  const t = document.getElementById('toggle-btn');
+  p.classList.toggle('collapsed');
+  t.style.display = p.classList.contains('collapsed') ? 'block' : 'none';
+}
+function resetAll(){
+  speed = 80; fs = 16; alpha = .85; mode = 'green';
+  document.getElementById('speed').value = 80; document.getElementById('v-speed').textContent = 80;
+  document.getElementById('fsize').value = 16; document.getElementById('v-size').textContent = 16;
+  document.getElementById('alpha').value = 85; document.getElementById('v-alpha').textContent = '0.85';
+  document.getElementById('color').value = 'green';
+  resize();
+}
+function toggleFull(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen && document.exitFullscreen();
+  }
+}
+cv.addEventListener('click', togglePanel);
+</script>
+</body>
+</html>

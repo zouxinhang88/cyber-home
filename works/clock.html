@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON CLOCK // 霓虹时钟</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#00e5ff;--accent2:#00ff9c;--bg:#000005;--white:#e8e8ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;height:100vh;overflow:hidden;position:relative;}
+#rain{position:fixed;inset:0;opacity:.5;z-index:0;}
+.crt{position:fixed;inset:0;z-index:40;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;}
+.back{font-family:'Press Start 2P';font-size:9px;color:var(--accent);text-decoration:none;border:3px solid var(--accent);padding:9px 12px;text-shadow:0 0 6px var(--accent);background:rgba(0,0,5,.6);transition:all .1s steps(3);}
+.back:hover{background:var(--accent);color:#000;box-shadow:0 0 20px rgba(0,229,255,.9);}
+.title{font-family:'Press Start 2P';font-size:10px;color:var(--accent2);text-shadow:0 0 10px var(--accent2);letter-spacing:2px;}
+.clock-wrap{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:26px;}
+#time{
+  font-family:'Press Start 2P';font-size:clamp(44px,12vw,128px);
+  color:var(--accent);text-shadow:0 0 18px var(--accent),0 0 60px rgba(0,229,255,.5);
+  letter-spacing:4px;line-height:1;user-select:none;
+}
+#time .colon{animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:.15}}
+#date{
+  font-family:'Press Start 2P';font-size:clamp(10px,2.4vw,16px);
+  color:var(--accent2);text-shadow:0 0 12px var(--accent2),0 0 30px rgba(0,255,156,.4);
+  letter-spacing:3px;
+}
+#week{font-family:'VT323';font-size:clamp(20px,4vw,34px);color:var(--white);opacity:.75;letter-spacing:6px;}
+.theme-row{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:30;display:flex;gap:10px;background:rgba(0,0,5,.7);padding:10px 14px;border:2px solid rgba(232,232,255,.2);}
+.theme-btn{width:22px;height:22px;border:3px solid transparent;cursor:pointer;transition:all .1s steps(3);}
+.theme-btn:hover{transform:scale(1.25);}
+.theme-btn.on{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,.6);}
+.theme-btn[data-c="#ff2fd6"]{background:#ff2fd6;}
+.theme-btn[data-c="#00e5ff"]{background:#00e5ff;}
+.theme-btn[data-c="#bf5aff"]{background:#bf5aff;}
+.theme-btn[data-c="#00ff9c"]{background:#00ff9c;}
+.theme-btn[data-c="#ffe600"]{background:#ffe600;}
+.theme-btn[data-c="#ff6b35"]{background:#ff6b35;}
+.full-btn{position:fixed;bottom:22px;right:22px;z-index:30;font-family:'Press Start 2P';font-size:8px;color:var(--accent2);background:rgba(0,0,5,.7);border:2px solid var(--accent2);padding:10px;cursor:pointer;text-shadow:0 0 6px var(--accent2);transition:all .1s steps(3);}
+.full-btn:hover{background:var(--accent2);color:#000;}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+<div class="crt"></div>
+<div class="topbar">
+  <a class="back" href="../index.html">◀ BACK</a>
+  <div class="title">NEON CLOCK</div>
+</div>
+<div class="clock-wrap">
+  <div id="time">--:--:--</div>
+  <div id="date">----.--.--</div>
+  <div id="week">LOADING...</div>
+</div>
+<div class="theme-row" id="theme-row">
+  <button class="theme-btn" data-c="#ff2fd6"></button>
+  <button class="theme-btn on" data-c="#00e5ff"></button>
+  <button class="theme-btn" data-c="#bf5aff"></button>
+  <button class="theme-btn" data-c="#00ff9c"></button>
+  <button class="theme-btn" data-c="#ffe600"></button>
+  <button class="theme-btn" data-c="#ff6b35"></button>
+</div>
+<button class="full-btn" onclick="toggleFull()">FULLSCREEN</button>
+
+<script>
+/* 主题切换 */
+const THEMES = {
+  '#ff2fd6':['#ff2fd6','#ff77e6'],
+  '#00e5ff':['#00e5ff','#00ff9c'],
+  '#bf5aff':['#bf5aff','#ff2fd6'],
+  '#00ff9c':['#00ff9c','#00e5ff'],
+  '#ffe600':['#ffe600','#ff6b35'],
+  '#ff6b35':['#ff6b35','#ff2fd6']
+};
+document.querySelectorAll('.theme-btn').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.theme-btn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const [a,c2] = THEMES[b.dataset.c];
+    document.documentElement.style.setProperty('--accent', a);
+    document.documentElement.style.setProperty('--accent2', c2);
+    rainColor = a; rainColor2 = c2;
+  });
+});
+
+/* 时钟 */
+const WEEK = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+function tick(){
+  const d = new Date();
+  const p = n=>String(n).padStart(2,'0');
+  const h = p(d.getHours()), m = p(d.getMinutes()), s = p(d.getSeconds());
+  document.getElementById('time').innerHTML =
+    '<span>'+h+'</span><span class="colon">:</span><span>'+m+'</span><span class="colon">:</span><span>'+s+'</span>';
+  document.getElementById('date').textContent =
+    d.getFullYear()+'.'+p(d.getMonth()+1)+'.'+p(d.getDate());
+  document.getElementById('week').textContent = '// ' + WEEK[d.getDay()] + ' //';
+}
+tick();
+setInterval(tick, 1000);
+
+/* 全屏 */
+function toggleFull(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen && document.exitFullscreen();
+  }
+}
+
+/* 背景数字雨（跟随主题色） */
+const cv = document.getElementById('rain'), ctx = cv.getContext('2d');
+let w,h,cols=[],fs=18;
+let rainColor = '#00e5ff', rainColor2 = '#00ff9c';
+function resize(){
+  w = cv.width = innerWidth; h = cv.height = innerHeight;
+  cols = Array(Math.floor(w/fs)).fill(0);
+}
+resize();
+addEventListener('resize', resize);
+const chars='アイウエオカキクケコサシスセソ0123456789<>/[]#&$%';
+setInterval(()=>{
+  ctx.fillStyle = 'rgba(0,0,5,0.12)';
+  ctx.fillRect(0,0,w,h);
+  ctx.font = fs+'px monospace';
+  for(let i=0;i<cols.length;i++){
+    const ch = chars[Math.floor(Math.random()*chars.length)];
+    const x = i*fs, y = cols[i]*fs;
+    ctx.fillStyle = Math.random()<.2 ? rainColor : rainColor2;
+    ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 6;
+    ctx.fillText(ch, x, y);
+    ctx.shadowBlur = 0;
+    if(y>h && Math.random()>.975) cols[i]=0;
+    cols[i]++;
+  }
+}, 60);
+</script>
+</body>
+</html>

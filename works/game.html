@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON QUEST // 像素冒险</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff2fd6;--blue:#00e5ff;--purple:#bf5aff;--green:#00ff9c;--yellow:#ffe600;--bg:#000005;--white:#e8e8ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-size:20px;min-height:100vh;overflow-x:hidden;}
+.crt{position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 3px);}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:3px solid var(--purple);box-shadow:0 0 20px rgba(191,90,255,.3);}
+.back{font-family:'Press Start 2P';font-size:10px;color:var(--blue);text-decoration:none;border:3px solid var(--blue);padding:10px 14px;text-shadow:0 0 6px var(--blue);transition:all .1s steps(3);}
+.back:hover{background:var(--blue);color:#000;box-shadow:0 0 20px rgba(0,229,255,.9);}
+.title{font-family:'Press Start 2P';font-size:12px;color:var(--pink);text-shadow:0 0 10px var(--pink);letter-spacing:2px;}
+.wrap{display:flex;flex-direction:column;align-items:center;padding:26px 16px;gap:18px;}
+.hud{display:flex;gap:26px;font-family:'Press Start 2P';font-size:10px;}
+.hud b{color:var(--yellow);text-shadow:0 0 8px var(--yellow);}
+.hud .gem{color:var(--pink);text-shadow:0 0 8px var(--pink);}
+.hud .life{color:var(--green);text-shadow:0 0 8px var(--green);}
+.hud .lv{color:var(--blue);text-shadow:0 0 8px var(--blue);}
+#game{
+  border:4px solid var(--pink);
+  box-shadow:0 0 0 4px rgba(0,0,0,.9),0 0 34px rgba(255,47,214,.5),inset 0 0 20px rgba(255,47,214,.1);
+  image-rendering:pixelated;background:#04040f;max-width:96vw;
+}
+.ctrl{font-family:'VT323';color:var(--dim);text-align:center;font-size:18px;line-height:1.6;}
+.ctrl span{color:var(--green);}
+.overlay{position:fixed;inset:0;z-index:60;display:none;justify-content:center;align-items:center;background:rgba(0,0,5,.9);}
+.overlay.show{display:flex;}
+.box{text-align:center;padding:36px;border:4px solid var(--pink);background:#050510;box-shadow:0 0 40px rgba(255,47,214,.5);max-width:92vw;}
+.box h1{font-family:'Press Start 2P';font-size:clamp(14px,4vw,24px);color:var(--pink);text-shadow:0 0 14px var(--pink);margin-bottom:14px;line-height:1.7;}
+.box h1.g{color:var(--green);text-shadow:0 0 14px var(--green);}
+.box h1.b{color:var(--blue);text-shadow:0 0 14px var(--blue);}
+.box p{font-size:22px;color:var(--dim);margin-bottom:22px;line-height:1.6;}
+.box .px{font-family:'Press Start 2P';font-size:12px;color:#000;background:var(--pink);border:none;padding:14px 26px;cursor:pointer;box-shadow:0 0 20px rgba(255,47,214,.6);transition:all .1s steps(3);}
+.box .px:hover{background:var(--green);box-shadow:0 0 20px rgba(0,255,156,.6);}
+.box .px.g{background:var(--green);box-shadow:0 0 20px rgba(0,255,156,.6);}
+.box .px.g:hover{background:var(--pink);box-shadow:0 0 20px rgba(255,47,214,.6);}
+</style>
+</head>
+<body>
+<div class="crt"></div>
+<div class="topbar">
+  <a class="back" href="../index.html">◀ BACK</a>
+  <div class="title">NEON QUEST</div>
+  <div class="title" style="color:var(--blue);text-shadow:0 0 10px var(--blue);font-size:9px;">LV.<span id="lv-show">1</span></div>
+</div>
+<div class="wrap">
+  <div class="hud">
+    <span>宝石 <b class="gem" id="gem-hud">0/5</b></span>
+    <span>生命 <b class="life" id="life-hud">3</b></span>
+    <span>得分 <b id="score-hud">0</b></span>
+  </div>
+  <canvas id="game" width="480" height="336"></canvas>
+  <div class="ctrl">方向键 / WASD 移动 &nbsp;·&nbsp; 收集全部 <span>宝石</span> 找到出口 &nbsp;·&nbsp; 躲避 <span>敌人</span></div>
+</div>
+
+<div class="overlay show" id="ov-start">
+  <div class="box">
+    <h1>NEON QUEST</h1>
+    <p>16-BIT 像素冒险<br>收集宝石，躲避敌人，抵达出口</p>
+    <button class="px" onclick="startGame()">START ▶</button>
+  </div>
+</div>
+<div class="overlay" id="ov-win">
+  <div class="box">
+    <h1 class="g">VICTORY!</h1>
+    <p id="win-msg">你已通关全部关卡</p>
+    <button class="px g" onclick="startGame()">再玩一次</button>
+    <br><br>
+    <a class="back" href="../index.html" style="font-size:9px;display:inline-block;">返回主页</a>
+  </div>
+</div>
+<div class="overlay" id="ov-over">
+  <div class="box">
+    <h1 class="b">GAME OVER</h1>
+    <p id="over-msg">信号丢失...</p>
+    <button class="px" onclick="startGame()">RETRY</button>
+  </div>
+</div>
+
+<script>
+const cv = document.getElementById('game');
+const ctx = cv.getContext('2d');
+const TILE = 24, COLS = 20, ROWS = 14;
+
+const MAPS = [
+  // 关卡1
+  [
+    "11111111111111111111",
+    "10000000001000000001",
+    "10111100101001111001",
+    "10100000101000010001",
+    "10101111111111010001",
+    "10101000000001010001",
+    "10101011110101010001",
+    "10101010010101010001",
+    "10100010010101010001",
+    "10111110010101010101",
+    "10000000000001010001",
+    "10011111111111011101",
+    "10000000000000000001",
+    "11111111111111111111"
+  ],
+  // 关卡2
+  [
+    "11111111111111111111",
+    "10000100010000100001",
+    "10110101111101011001",
+    "10110100000100011001",
+    "10110101111101011001",
+    "10100100010000100101",
+    "10100111111111100101",
+    "10100000010000000101",
+    "10111111010011111101",
+    "10000001010000000001",
+    "10111101010111111001",
+    "10100000000100000001",
+    "10000111111111100001",
+    "11111111111111111111"
+  ],
+  // 关卡3
+  [
+    "11111111111111111111",
+    "10000000000000000001",
+    "10111101111101111101",
+    "10100000000100000001",
+    "10101111101111101101",
+    "10101000000000001001",
+    "10101011111111101001",
+    "10101010000000101001",
+    "10101010111110101001",
+    "10100010100010101001",
+    "10111110100010111101",
+    "10000000000000000001",
+    "10000000000000000001",
+    "11111111111111111111"
+  ]
+];
+
+const COLORS = {
+  wall:'#3a3a5c', wallHi:'#bf5aff', floor:'#0a0a18', gem:'#ff2fd6', gemHi:'#ff77e6',
+  player:'#00e5ff', playerHi:'#e8e8ff', enemy:'#ff0000', enemyHi:'#ff7777', exit:'#00ff9c', exitHi:'#e8ff88'
+};
+
+let level, gems, score, lives, player, enemies, exitPos, state, keys, invuln, gemsCollected, needGems, tick;
+const MOVE_PLAYER_MS = 170, MOVE_ENEMY_MS = 260;
+let lastPlayerMove = 0, lastEnemyMove = 0;
+
+function initLevel(lv){
+  const map = MAPS[lv-1];
+  const grid = map.map(r=>r.split(''));
+  player = {x:1,y:1};
+  gems = []; enemies = []; exitPos = null; gemsCollected = 0;
+  grid.forEach((row,y)=>row.forEach((c,x)=>{
+    if(c==='1') return;
+    if(c==='0') grid[y][x]='.';
+  }));
+  // 放置宝石：随机空地
+  needGems = 4 + lv;
+  let placed = 0, guard = 0;
+  while(placed < needGems && guard++ < 500){
+    const x = 1+Math.floor(Math.random()*(COLS-2));
+    const y = 1+Math.floor(Math.random()*(ROWS-2));
+    if(grid[y][x]==='.' && !(x===1&&y===1)){
+      grid[y][x]='G'; gems.push({x,y}); placed++;
+    }
+  }
+  // 敌人
+  let eCount = 2 + lv;
+  let ePlaced = 0, eg = 0;
+  while(ePlaced < eCount && eg++ < 500){
+    const x = 1+Math.floor(Math.random()*(COLS-2));
+    const y = 1+Math.floor(Math.random()*(ROWS-2));
+    if(grid[y][x]==='.' && !(x===1&&y===1) && Math.abs(x-1)+Math.abs(y-1) > 6){
+      const horiz = Math.random()>.5;
+      enemies.push({x,y,horiz,dir:1});
+      ePlaced++;
+    }
+  }
+  // 出口：最右下空地
+  for(let y=ROWS-1;y>0;y--) for(let x=COLS-1;x>0;x--){
+    if(grid[y][x]==='.' && Math.abs(x-1)+Math.abs(y-1) > 10){ exitPos={x,y}; grid[y][x]='E'; y=0; break; }
+  }
+  if(!exitPos){ exitPos={x:COLS-2,y:ROWS-2}; grid[ROWS-2][COLS-2]='E'; }
+  level = {grid};
+  document.getElementById('lv-show').textContent = lv;
+}
+
+function startGame(){
+  document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show'));
+  score = 0; lives = 3; level = 1;
+  initLevel(level);
+  updateHud();
+  state = 'play';
+  if(!loopStarted){ loopStarted = true; requestAnimationFrame(loop); }
+}
+function updateHud(){
+  document.getElementById('gem-hud').textContent = gemsCollected + '/' + needGems;
+  document.getElementById('life-hud').textContent = lives;
+  document.getElementById('score-hud').textContent = score;
+}
+
+function tryMove(nx,ny){
+  const c = level.grid[ny] && level.grid[ny][nx];
+  if(!c || c==='1') return false;
+  player.x = nx; player.y = ny;
+  if(c==='G'){
+    level.grid[ny][nx]='.'; gemsCollected++; score += 10;
+    gems = gems.filter(g=>!(g.x===nx&&g.y===ny));
+    updateHud();
+    if(gemsCollected >= needGems){ showMsg('出口已开启！', 'EXIT OPEN'); }
+  }
+  if(c==='E' && gemsCollected >= needGems){
+    score += 100;
+    if(level < 3){
+      level++; initLevel(level); updateHud(); showMsg('第 '+level+' 关', 'STAGE '+level+'!');
+    }else{
+      state='done';
+      document.getElementById('win-msg').textContent = '最终得分: '+score+'  // 全部关卡通过';
+      document.getElementById('ov-win').classList.add('show');
+    }
+    return true;
+  }
+  return true;
+}
+function showMsg(t, sub){
+  // 简单浮动提示
+  flashText = sub + '  ' + t;
+  flashTimer = 90;
+}
+
+let flashText='', flashTimer=0, loopStarted=false;
+
+function loop(){
+  if(state==='play'){
+    // 玩家移动（带移动间隔，控制节奏：约5.9格/秒）
+    let dx=0, dy=0;
+    if(keys['ArrowLeft']||keys['a']) dx-=1;
+    if(keys['ArrowRight']||keys['d']) dx+=1;
+    if(keys['ArrowUp']||keys['w']) dy-=1;
+    if(keys['ArrowDown']||keys['s']) dy+=1;
+    const nowMs = performance.now();
+    if((dx!==0||dy!==0) && nowMs - lastPlayerMove >= MOVE_PLAYER_MS){
+      if(dx!==0) tryMove(player.x+dx, player.y);
+      if(dy!==0) tryMove(player.x, player.y+dy);
+      lastPlayerMove = nowMs;
+    }
+    // 敌人移动（独立节奏，比玩家稍慢）
+    if(nowMs - lastEnemyMove >= MOVE_ENEMY_MS){
+      for(const e of enemies){
+        let nx = e.x + (e.horiz?e.dir:0);
+        let ny = e.y + (e.horiz?0:e.dir);
+        const c = level.grid[ny] && level.grid[ny][nx];
+        if(!c || c==='1' || c==='E'){ e.dir *= -1; }
+        else{ e.x = nx; e.y = ny; }
+        // 碰撞
+        if(e.x===player.x && e.y===player.y && invuln<=0){
+          lives--; score = Math.max(0, score-20); invuln = 70; updateHud();
+          if(lives<=0){
+            state='done';
+            document.getElementById('over-msg').textContent = '得分: '+score+'  // 生命耗尽';
+            document.getElementById('ov-over').classList.add('show');
+          }
+        }
+      }
+      lastEnemyMove = nowMs;
+    }
+    if(invuln>0) invuln--;
+    if(flashTimer>0) flashTimer--;
+  }
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function draw(){
+  ctx.fillStyle = '#04040f';
+  ctx.fillRect(0,0,cv.width,cv.height);
+  const g = level.grid;
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
+    const c = g[y][x];
+    const px = x*TILE, py = y*TILE;
+    if(c==='1'){
+      ctx.fillStyle = COLORS.wall;
+      ctx.fillRect(px,py,TILE,TILE);
+      ctx.fillStyle = COLORS.wallHi;
+      ctx.fillRect(px,py,TILE,3);
+      ctx.fillRect(px,py,3,TILE);
+    }else{
+      ctx.fillStyle = COLORS.floor;
+      ctx.fillRect(px,py,TILE,TILE);
+      if((x+y)%2===0){ ctx.fillStyle='rgba(191,90,255,.06)'; ctx.fillRect(px,py,TILE,TILE); }
+    }
+    if(c==='G'){
+      const pulse = Math.floor(tick/12)%2===0;
+      ctx.fillStyle = pulse?COLORS.gemHi:COLORS.gem;
+      ctx.shadowColor = COLORS.gem; ctx.shadowBlur = 8;
+      ctx.fillRect(px+7,py+7,10,10);
+      ctx.shadowBlur = 0;
+    }
+    if(c==='E'){
+      const pulse = Math.floor(tick/10)%2===0;
+      ctx.fillStyle = pulse?COLORS.exitHi:COLORS.exit;
+      ctx.shadowColor = COLORS.exit; ctx.shadowBlur = 10;
+      ctx.fillRect(px+4,py+4,16,16);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(px+8,py+8,8,8);
+      ctx.shadowBlur = 0;
+    }
+  }
+  // 敌人
+  for(const e of enemies){
+    const pulse = Math.floor(tick/8)%2===0;
+    ctx.fillStyle = pulse?COLORS.enemyHi:COLORS.enemy;
+    ctx.shadowColor = COLORS.enemy; ctx.shadowBlur = 8;
+    ctx.fillRect(e.x*TILE+3,e.y*TILE+3,18,18);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(e.x*TILE+6,e.y*TILE+6,4,4);
+    ctx.fillRect(e.x*TILE+14,e.y*TILE+6,4,4);
+    ctx.shadowBlur = 0;
+  }
+  // 玩家
+  const blink = invuln>0 && Math.floor(invuln/6)%2===0;
+  if(!blink){
+    ctx.fillStyle = COLORS.player;
+    ctx.shadowColor = COLORS.player; ctx.shadowBlur = 10;
+    ctx.fillRect(player.x*TILE+2,player.y*TILE+2,20,20);
+    ctx.fillStyle = COLORS.playerHi;
+    ctx.fillRect(player.x*TILE+6,player.y*TILE+6,12,12);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(player.x*TILE+5,player.y*TILE+7,4,6);
+    ctx.fillRect(player.x*TILE+15,player.y*TILE+7,4,6);
+    ctx.shadowBlur = 0;
+  }
+  // 浮动提示
+  if(flashTimer>0){
+    ctx.font = 'bold 16px monospace';
+    ctx.fillStyle = COLORS.yellow??COLORS.exit;
+    ctx.shadowColor = '#ffe600'; ctx.shadowBlur = 10;
+    ctx.textAlign = 'center';
+    ctx.fillText(flashText, cv.width/2, 30);
+    ctx.shadowBlur = 0;
+  }
+  tick++;
+}
+
+keys = {};
+document.addEventListener('keydown', e=>{
+  keys[e.key] = true;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+});
+document.addEventListener('keyup', e=>{ keys[e.key] = false; });
+</script>
+</body>
+</html>
