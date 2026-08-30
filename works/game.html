@@ -25,7 +25,8 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
 #game{
   border:4px solid var(--pink);
   box-shadow:0 0 0 4px rgba(0,0,0,.9),0 0 34px rgba(255,47,214,.5),inset 0 0 20px rgba(255,47,214,.1);
-  image-rendering:pixelated;background:#04040f;max-width:96vw;
+  image-rendering:pixelated;background:#04040f;
+  max-width:96vw;width:auto;height:auto;aspect-ratio:480/336;
 }
 .ctrl{font-family:'VT323';color:var(--dim);text-align:center;font-size:18px;line-height:1.6;}
 .ctrl span{color:var(--green);}
@@ -47,6 +48,40 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
 .stage-btn.lock{color:#555;border-color:#333;box-shadow:3px 3px 0 0 rgba(0,0,0,.6);text-shadow:none;cursor:not-allowed;}
 .overlay .back-top{position:absolute;top:16px;left:16px;font-family:'Press Start 2P';font-size:10px;color:var(--blue);text-decoration:none;border:3px solid var(--blue);padding:10px 14px;text-shadow:0 0 6px var(--blue);background:rgba(0,0,5,.55);box-shadow:3px 3px 0 0 rgba(0,229,255,.4);transition:all .1s steps(3);z-index:2;}
 .overlay .back-top:hover{background:var(--blue);color:#000;box-shadow:3px 3px 0 0 rgba(0,229,255,.9),0 0 20px rgba(0,229,255,.9);}
+/* ===== 移动端虚拟方向键（像素风 D-PAD，仅触屏显示） ===== */
+.dpad{
+  position:fixed;right:18px;bottom:20px;z-index:55;
+  display:none;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,64px);
+  gap:6px;padding:12px;
+  background:rgba(0,0,8,.62);border:3px solid rgba(191,90,255,.45);
+  box-shadow:0 0 24px rgba(191,90,255,.25),inset 0 0 14px rgba(191,90,255,.12);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  user-select:none;-webkit-user-select:none;touch-action:none;
+}
+@media (hover:none),(pointer:coarse){ .dpad{display:grid;} }
+.dpad-btn{
+  font-family:'Press Start 2P';font-size:15px;color:var(--blue);background:#050514;
+  border:3px solid var(--blue);cursor:pointer;text-shadow:0 0 8px var(--blue);
+  box-shadow:3px 3px 0 0 rgba(0,229,255,.4),inset 0 0 10px rgba(0,229,255,.1);
+  clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
+  transition:all .06s steps(2);
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.dpad-btn:hover{background:var(--blue);color:#000;box-shadow:3px 3px 0 0 rgba(0,229,255,.9),0 0 18px rgba(0,229,255,.9);}
+.dpad-btn:active,.dpad-btn.pressed{background:var(--blue);color:#000;transform:translate(2px,2px);box-shadow:1px 1px 0 0 rgba(0,229,255,.9),0 0 18px rgba(0,229,255,.9);}
+.dpad .d-up{grid-area:1/2;}
+.dpad .d-left{grid-area:2/1;}
+.dpad .d-right{grid-area:2/3;}
+.dpad .d-down{grid-area:3/2;}
+.dpad .d-core{grid-area:2/2;align-self:center;justify-self:center;width:22px;height:22px;background:var(--purple);box-shadow:0 0 12px rgba(191,90,255,.8);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);pointer-events:none;}
+@media (max-width:640px){
+  .stage-grid{grid-template-columns:repeat(2,1fr);max-width:320px;}
+  .box{padding:24px 16px;}
+  .box p{font-size:18px;}
+  .hud{flex-wrap:wrap;justify-content:center;gap:14px;}
+  .wrap{padding:16px 8px;}
+}
 </style>
 </head>
 <body>
@@ -64,6 +99,14 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
   </div>
   <canvas id="game" width="480" height="336"></canvas>
   <div class="ctrl">方向键 / WASD 移动 &nbsp;·&nbsp; 收集全部 <span>宝石</span> 找到出口 &nbsp;·&nbsp; 躲避 <span>敌人</span></div>
+</div>
+
+<div class="dpad" id="dpad">
+  <button class="dpad-btn d-up" data-dir="up">▲</button>
+  <button class="dpad-btn d-left" data-dir="left">◀</button>
+  <div class="d-core"></div>
+  <button class="dpad-btn d-right" data-dir="right">▶</button>
+  <button class="dpad-btn d-down" data-dir="down">▼</button>
 </div>
 
 <div class="overlay show" id="ov-start">
@@ -516,6 +559,21 @@ document.addEventListener('keydown', e=>{
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
 });
 document.addEventListener('keyup', e=>{ keys[e.key] = false; });
+
+/* ===== 移动端虚拟方向键（触屏） ===== */
+const DIR_KEYS = { up:'ArrowUp', down:'ArrowDown', left:'ArrowLeft', right:'ArrowRight' };
+document.querySelectorAll('.dpad-btn').forEach(btn=>{
+  const k = DIR_KEYS[btn.dataset.dir];
+  if(!k) return;
+  const press = e=>{ e.preventDefault(); keys[k] = true; btn.classList.add('pressed'); };
+  const release = e=>{ e.preventDefault(); keys[k] = false; btn.classList.remove('pressed'); };
+  btn.addEventListener('touchstart', press, {passive:false});
+  btn.addEventListener('touchend', release, {passive:false});
+  btn.addEventListener('touchcancel', release, {passive:false});
+  btn.addEventListener('mousedown', press);
+  btn.addEventListener('mouseup', release);
+  btn.addEventListener('mouseleave', release);
+});
 </script>
 </body>
 </html>
