@@ -577,7 +577,7 @@ body{
 <div class="admin-overlay" id="admin-overlay">
   <div class="admin-panel">
     <h2>ADMIN <span>// 控制台</span></h2>
-    <button class="admin-close" onclick="closeAdmin()">✕</button>
+    <button class="admin-close" onclick="logoutAdmin()">✕</button>
     <div class="admin-form">
       <div class="field">
         <label>姓名 NAME</label>
@@ -614,7 +614,7 @@ body{
       <div class="admin-actions">
         <button class="px-btn" onclick="saveAdmin()">保存配置</button>
         <button class="px-btn pink" onclick="resetData()">恢复默认</button>
-        <button class="px-btn purple" onclick="closeAdmin()">退出后台</button>
+        <button class="px-btn purple" onclick="logoutAdmin()">退出后台</button>
       </div>
     </div>
   </div>
@@ -924,6 +924,12 @@ function openAdmin(){
   }
 }
 function closeAdmin(){
+  // 仅关闭面板（保存/恢复默认后的收尾），不清除登录状态
+  adminOverlay.classList.remove('show');
+}
+function logoutAdmin(){
+  // 退出后台：立即清除登录状态，下次进入需重新输入密码
+  sessionStorage.removeItem('cyber_admin_ok');
   adminOverlay.classList.remove('show');
 }
 function fillAdmin(){
@@ -1043,7 +1049,11 @@ function renderAdminAvatarPreview(){
 document.addEventListener('keydown', e=>{
   if(e.key === 'Escape'){
     loginOverlay.classList.remove('show');
-    adminOverlay.classList.remove('show');
+    if(adminOverlay.classList.contains('show')){
+      logoutAdmin();
+    }else{
+      adminOverlay.classList.remove('show');
+    }
   }
   if(e.key === 'Enter' && loginOverlay.classList.contains('show')){
     doLogin();
