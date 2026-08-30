@@ -44,6 +44,8 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
 .stage-btn:hover:not(.lock){background:var(--blue);color:#000;box-shadow:5px 5px 0 0 rgba(0,229,255,.9),0 0 26px rgba(0,229,255,.9),inset 0 0 14px rgba(0,229,255,.4);text-shadow:none;}
 .stage-btn:active:not(.lock){transform:translate(3px,3px);box-shadow:2px 2px 0 0 rgba(0,229,255,.55),0 0 16px rgba(0,229,255,.35);}
 .stage-btn.lock{color:#555;border-color:#333;box-shadow:3px 3px 0 0 rgba(0,0,0,.6);text-shadow:none;cursor:not-allowed;}
+.overlay .back-top{position:absolute;top:16px;left:16px;font-family:'Press Start 2P';font-size:10px;color:var(--blue);text-decoration:none;border:3px solid var(--blue);padding:10px 14px;text-shadow:0 0 6px var(--blue);background:rgba(0,0,5,.55);box-shadow:3px 3px 0 0 rgba(0,229,255,.4);transition:all .1s steps(3);z-index:2;}
+.overlay .back-top:hover{background:var(--blue);color:#000;box-shadow:3px 3px 0 0 rgba(0,229,255,.9),0 0 20px rgba(0,229,255,.9);}
 </style>
 </head>
 <body>
@@ -64,6 +66,7 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
 </div>
 
 <div class="overlay show" id="ov-start">
+  <a class="back-top" href="../index.html">◀ BACK</a>
   <div class="box">
     <h1>NEON QUEST</h1>
     <p>16-BIT 像素冒险<br>收集宝石，躲避敌人，抵达出口</p>
@@ -73,6 +76,7 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
   </div>
 </div>
 <div class="overlay" id="ov-select">
+  <a class="back-top" href="../index.html">◀ BACK</a>
   <div class="box">
     <h1 class="b">SELECT STAGE</h1>
     <p>选择关卡 · 通关解锁下一关</p>

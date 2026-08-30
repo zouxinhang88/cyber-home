@@ -443,6 +443,8 @@ body{
   text-shadow:0 0 8px var(--pink);min-height:18px;margin-bottom:10px;
 }
 .login-box .px-btn{width:100%;text-align:center;}
+.admin-overlay .back-top{position:absolute;top:16px;left:16px;font-family:var(--font-px);font-size:10px;color:var(--blue);text-decoration:none;border:3px solid var(--blue);padding:10px 14px;text-shadow:0 0 6px var(--blue);background:rgba(0,0,5,.55);box-shadow:3px 3px 0 0 rgba(0,229,255,.4);transition:all .1s steps(3);z-index:2;}
+.admin-overlay .back-top:hover{background:var(--blue);color:#000;box-shadow:3px 3px 0 0 rgba(0,229,255,.9),0 0 20px rgba(0,229,255,.9);}
 
 /* 提示 toast */
 .toast{
@@ -565,6 +567,7 @@ body{
 
 <!-- ======== 登录弹窗 ======== -->
 <div class="admin-overlay" id="login-overlay">
+  <a class="back-top" href="javascript:void(0)" onclick="closeLogin()">◀ BACK</a>
   <div class="login-box">
     <h3>// ACCESS CONTROL //</h3>
     <input type="password" id="login-pass" placeholder="******" maxlength="12" autocomplete="off">
@@ -897,6 +900,11 @@ function openLogin(){
   loginOverlay.classList.add('show');
   document.getElementById('login-err').textContent = '';
   setTimeout(()=>document.getElementById('login-pass').focus(), 60);
+}
+function closeLogin(){
+  loginOverlay.classList.remove('show');
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-err').textContent = '';
 }
 function doLogin(){
   const v = document.getElementById('login-pass').value;
