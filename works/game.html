@@ -22,6 +22,10 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
 .hud .gem{color:var(--pink);text-shadow:0 0 8px var(--pink);}
 .hud .life{color:var(--green);text-shadow:0 0 8px var(--green);}
 .hud .lv{color:var(--blue);text-shadow:0 0 8px var(--blue);}
+.hpbar{display:inline-flex;gap:4px;vertical-align:middle;}
+.hpbar i{width:16px;height:13px;background:var(--green);box-shadow:0 0 8px var(--green);border:2px solid rgba(255,255,255,.25);clip-path:polygon(0 0,calc(100% - 4px) 0,100% 4px,100% 100%,4px 100%,0 calc(100% - 4px));transition:all .1s steps(2);}
+.hpbar i.off{background:#17172e;box-shadow:none;border-color:rgba(255,255,255,.08);}
+.hpbar.low i:not(.off){background:var(--pink);box-shadow:0 0 8px var(--pink);border-color:rgba(255,255,255,.3);}
 #game{
   border:4px solid var(--pink);
   box-shadow:0 0 0 4px rgba(0,0,0,.9),0 0 34px rgba(255,47,214,.5),inset 0 0 20px rgba(255,47,214,.1);
@@ -94,7 +98,7 @@ body{background:var(--bg);color:var(--white);font-family:'VT323',monospace;font-
 <div class="wrap">
   <div class="hud">
     <span>宝石 <b class="gem" id="gem-hud">0/5</b></span>
-    <span>生命 <b class="life" id="life-hud">3</b></span>
+    <span>HP <span class="hpbar" id="hpbar"><i></i><i></i><i></i></span></span>
     <span>得分 <b id="score-hud">0</b></span>
   </div>
   <canvas id="game" width="480" height="336"></canvas>
@@ -328,7 +332,7 @@ const COLORS = {
   player:'#00e5ff', playerHi:'#e8e8ff', enemy:'#ff0000', enemyHi:'#ff7777', exit:'#00ff9c', exitHi:'#e8ff88'
 };
 
-let level, gems, score, lives, player, enemies, exitPos, state, keys, invuln, gemsCollected, needGems, tick;
+let level, gems, score, lives, player, enemies, exitPos, state, keys, invuln = 0, gemsCollected, needGems, tick;
 const MOVE_PLAYER_MS = 170, MOVE_ENEMY_MS = 260;
 let lastPlayerMove = 0, lastEnemyMove = 0;
 
@@ -378,7 +382,7 @@ try{ unlocked = Math.max(10, parseInt(localStorage.getItem('nq_unlocked')||'10',
 function startGame(){ startFromLevel(1); }
 function startFromLevel(n){
   document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('show'));
-  score = 0; lives = 3; level = n;
+  score = 0; lives = 3; invuln = 0; level = n;
   initLevel(level);
   updateHud();
   state = 'play';
@@ -406,8 +410,10 @@ function buildStageGrid(){
 }
 function updateHud(){
   document.getElementById('gem-hud').textContent = gemsCollected + '/' + needGems;
-  document.getElementById('life-hud').textContent = lives;
   document.getElementById('score-hud').textContent = score;
+  const hp = document.querySelectorAll('#hpbar i');
+  hp.forEach((el,i)=>el.classList.toggle('off', i>=lives));
+  document.getElementById('hpbar').classList.toggle('low', lives<=1);
 }
 
 function tryMove(nx,ny){
