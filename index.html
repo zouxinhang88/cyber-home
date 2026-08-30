@@ -243,6 +243,12 @@ body{
 
 /* 霓虹像素按钮 */
 .btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:20px;}
+.contact-card{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.35);padding:10px 12px;display:flex;flex-direction:column;gap:5px;box-shadow:inset 0 0 14px rgba(0,229,255,.06);}
+.contact-card .cc-label{font-size:10px;letter-spacing:1px;color:var(--blue);opacity:.75;}
+.contact-card .cc-value{font-size:12px;color:#e8feff;word-break:break-all;line-height:1.5;}
+.contact-card a.cc-value{color:var(--blue);text-decoration:none;transition:text-shadow .1s steps(4);}
+.contact-card a.cc-value:hover{text-shadow:0 0 10px var(--blue);}
 .px-btn{
   font-family:var(--font-px);font-size:10px;color:var(--blue);
   background:transparent;border:3px solid var(--blue);
@@ -546,6 +552,9 @@ body{
         <a class="px-btn pink" href="mailto:zxh@cyber.pixel">联系我</a>
         <button class="px-btn purple" onclick="openAdmin()">管理</button>
       </div>
+
+      <!-- 联系我 -->
+      <div class="contact-grid" id="contact-grid"></div>
     </section>
 
     <!-- 作品区 -->
@@ -599,6 +608,22 @@ body{
       <div class="field">
         <label>个人简介 PROFILE（支持 {name} {age} {location} 占位符）</label>
         <textarea id="adm-bio" rows="5"></textarea>
+      </div>
+      <div class="field">
+        <label>联系邮箱1 EMAIL</label>
+        <input type="text" id="adm-email1" maxlength="60">
+      </div>
+      <div class="field">
+        <label>联系邮箱2 EMAIL（备用）</label>
+        <input type="text" id="adm-email2" maxlength="60">
+      </div>
+      <div class="field">
+        <label>电话 PHONE</label>
+        <input type="text" id="adm-phone" maxlength="20">
+      </div>
+      <div class="field">
+        <label>微信 WECHAT</label>
+        <input type="text" id="adm-wechat" maxlength="30">
       </div>
       <div class="field">
         <label>头像像素数据（16x16 颜色代码，用逗号分隔，可选）</label>
@@ -745,6 +770,26 @@ function renderProfile(){
       '};<span class="cursor-blink"></span>';
   }
   document.getElementById('profile-code').innerHTML = body;
+  renderContact();
+}
+
+/* ============================================================
+   渲染：联系我（邮箱 / 电话 / 微信）
+   ============================================================ */
+function renderContact(){
+  const grid = document.getElementById('contact-grid');
+  if(!grid) return;
+  const items = [];
+  if(DATA.email1) items.push({label:'E-MAIL // 邮箱', value:DATA.email1, href:'mailto:'+DATA.email1});
+  if(DATA.email2) items.push({label:'E-MAIL // 备用邮箱', value:DATA.email2, href:'mailto:'+DATA.email2});
+  if(DATA.phone)  items.push({label:'TEL // 电话', value:DATA.phone, href:'tel:'+DATA.phone});
+  if(DATA.wechat) items.push({label:'WECHAT // 微信', value:DATA.wechat});
+  grid.innerHTML = items.map(function(it){
+    const val = it.href
+      ? '<a class="cc-value" href="'+esc(it.href)+'">'+esc(it.value)+'</a>'
+      : '<div class="cc-value">'+esc(it.value)+'</div>';
+    return '<div class="contact-card"><div class="cc-label">'+esc(it.label)+'</div>'+val+'</div>';
+  }).join('');
 }
 
 /* ============================================================
