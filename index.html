@@ -454,6 +454,51 @@ body{
 .admin-overlay .back-top{position:absolute;top:16px;left:16px;font-family:var(--font-px);font-size:10px;color:var(--blue);text-decoration:none;border:3px solid var(--blue);padding:10px 14px;text-shadow:0 0 6px var(--blue);background:rgba(0,0,5,.55);box-shadow:3px 3px 0 0 rgba(0,229,255,.4);transition:all .1s steps(3);z-index:2;}
 .admin-overlay .back-top:hover{background:var(--blue);color:#000;box-shadow:3px 3px 0 0 rgba(0,229,255,.9),0 0 20px rgba(0,229,255,.9);}
 
+/* 联系我弹窗 */
+.contact-panel{
+  width:min(640px,92vw);background:#050510;padding:30px;
+  border:3px solid var(--pink);
+  box-shadow:0 0 0 3px rgba(0,0,0,.9),0 0 40px rgba(255,47,214,.45), inset 0 0 30px rgba(255,47,214,.05);
+  text-align:left;
+}
+.contact-panel h2{
+  font-family:var(--font-px);font-size:14px;color:var(--pink);
+  text-shadow:0 0 10px var(--pink);
+  margin-bottom:20px;letter-spacing:2px;
+}
+.contact-panel h2 span{color:var(--blue);text-shadow:0 0 10px var(--blue);}
+.contact-panel .admin-close{position:static;float:right;margin:-8px -8px 0 0;}
+.contact-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;clear:both;
+}
+.contact-card{
+  position:relative;
+  background:rgba(0,229,255,.04);border:2px solid rgba(0,229,255,.35);
+  padding:16px 14px;
+  display:flex;flex-direction:column;gap:8px;
+  box-shadow:inset 0 0 16px rgba(0,229,255,.06),4px 4px 0 0 rgba(0,229,255,.18);
+  clip-path:polygon(0 6px,6px 6px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 6px),0 calc(100% - 6px));
+  transition:all .1s steps(3);
+}
+.contact-card:hover{border-color:var(--pink);box-shadow:inset 0 0 16px rgba(255,47,214,.08),4px 4px 0 0 rgba(255,47,214,.3);}
+.contact-card .cc-label{
+  font-family:var(--font-px);font-size:9px;letter-spacing:1px;
+  color:var(--green);text-shadow:0 0 8px var(--green);
+}
+.contact-card .cc-value{
+  font-family:var(--font-term);font-size:18px;color:#e8feff;
+  word-break:break-all;line-height:1.5;
+}
+.contact-card a.cc-value{
+  color:var(--blue);text-decoration:none;transition:text-shadow .1s steps(4);
+}
+.contact-card a.cc-value:hover{text-shadow:0 0 12px var(--blue);}
+.contact-tip{
+  margin-top:20px;font-family:var(--font-px);font-size:8px;
+  color:var(--dim);letter-spacing:1px;text-align:center;
+}
+
 /* 提示 toast */
 .toast{
   position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
@@ -549,12 +594,9 @@ body{
       </div>
       <div class="btn-row">
         <a class="px-btn" href="#works">进入作品区</a>
-        <a class="px-btn pink" href="mailto:2943166239@qq.com">联系我</a>
+        <button class="px-btn pink" onclick="openContact()">联系我</button>
         <button class="px-btn purple" onclick="openAdmin()">管理</button>
       </div>
-
-      <!-- 联系我 -->
-      <div class="contact-grid" id="contact-grid"></div>
     </section>
 
     <!-- 作品区 -->
@@ -584,6 +626,17 @@ body{
     <input type="password" id="login-pass" placeholder="******" maxlength="12" autocomplete="off">
     <div class="login-err" id="login-err"></div>
     <button class="px-btn" onclick="doLogin()">验证身份</button>
+  </div>
+</div>
+
+<!-- ======== 联系我弹窗 ======== -->
+<div class="admin-overlay" id="contact-overlay">
+  <a class="back-top" href="javascript:void(0)" onclick="closeContact()">◀ BACK</a>
+  <div class="contact-panel">
+    <h2>CONTACT <span>// 联系我</span></h2>
+    <button class="admin-close" onclick="closeContact()">✕</button>
+    <div class="contact-grid" id="contact-grid"></div>
+    <div class="contact-tip">点击邮箱 / 电话可直接唤起邮件、拨号</div>
   </div>
 </div>
 
@@ -946,7 +999,15 @@ window.addEventListener('scroll', ()=>{
    ============================================================ */
 const loginOverlay = document.getElementById('login-overlay');
 const adminOverlay = document.getElementById('admin-overlay');
+const contactOverlay = document.getElementById('contact-overlay');
 
+function openContact(){
+  renderContact();
+  contactOverlay.classList.add('show');
+}
+function closeContact(){
+  contactOverlay.classList.remove('show');
+}
 function openLogin(){
   loginOverlay.classList.add('show');
   document.getElementById('login-err').textContent = '';
