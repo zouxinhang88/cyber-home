@@ -549,7 +549,7 @@ body{
       </div>
       <div class="btn-row">
         <a class="px-btn" href="#works">进入作品区</a>
-        <a class="px-btn pink" href="mailto:zxh@cyber.pixel">联系我</a>
+        <a class="px-btn pink" href="mailto:2943166239@qq.com">联系我</a>
         <button class="px-btn purple" onclick="openAdmin()">管理</button>
       </div>
 
@@ -661,7 +661,11 @@ const DEFAULT_DATA = {
   age:'10',
   location:'江苏徐州',
   bio:'',
-  avatar:'' // 16x16 像素数据，逗号分隔颜色值
+  avatar:'', // 16x16 像素数据，逗号分隔颜色值
+  email1:'2943166239@qq.com',
+  email2:'ZXH201052@outlook.com',
+  phone:'15799220151',
+  wechat:'zxh_bkket2025'
 };
 const STORAGE_KEY = 'cyber_zxh_data_v1';
 const ADMIN_PASS = '201052';
@@ -992,6 +996,10 @@ function fillAdmin(){
   document.getElementById('adm-age').value = DATA.age;
   document.getElementById('adm-loc').value = DATA.location;
   document.getElementById('adm-bio').value = DATA.bio || '';
+  document.getElementById('adm-email1').value = DATA.email1 || '';
+  document.getElementById('adm-email2').value = DATA.email2 || '';
+  document.getElementById('adm-phone').value = DATA.phone || '';
+  document.getElementById('adm-wechat').value = DATA.wechat || '';
   document.getElementById('adm-avatar').value = DATA.avatar || '';
   renderAdminAvatarPreview();
 }
@@ -1000,6 +1008,10 @@ function saveAdmin(){
   DATA.age = document.getElementById('adm-age').value || '10';
   DATA.location = document.getElementById('adm-loc').value.trim() || '江苏徐州';
   DATA.bio = document.getElementById('adm-bio').value.trim();
+  DATA.email1 = document.getElementById('adm-email1').value.trim();
+  DATA.email2 = document.getElementById('adm-email2').value.trim();
+  DATA.phone = document.getElementById('adm-phone').value.trim();
+  DATA.wechat = document.getElementById('adm-wechat').value.trim();
   DATA.avatar = document.getElementById('adm-avatar').value.trim();
   sessionStorage.setItem('cyber_admin_ok','1');
   persistData();
