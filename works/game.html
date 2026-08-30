@@ -319,8 +319,8 @@ function initLevel(lv){
   document.getElementById('lv-show').textContent = lv;
 }
 
-let unlocked = 1;
-try{ unlocked = parseInt(localStorage.getItem('nq_unlocked')||'1',10)||1; }catch(e){}
+let unlocked = 10;
+try{ unlocked = Math.max(10, parseInt(localStorage.getItem('nq_unlocked')||'10',10)||10); }catch(e){}
 
 function startGame(){ startFromLevel(1); }
 function startFromLevel(n){
