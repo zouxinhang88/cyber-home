@@ -976,7 +976,7 @@ function renderWorks(){
   const cv = document.getElementById('matrix-canvas');
   const ctx = cv.getContext('2d');
   let cols=[], fontSize=16, w, h;
-  const chars = 'アイウエオカキクケコサシスセソ0123456789ABCDEF<>/{}[]#&$%';
+  const chars = '0123456789ABCDEF<>/{}[]#&$%';
   function resize(){
     w = cv.width = window.innerWidth;
     h = cv.height = window.innerHeight;
