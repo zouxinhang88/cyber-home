@@ -13,14 +13,14 @@
 :root{
   --t1:rgba(255,255,255,.96);
   --t2:rgba(255,255,255,.85);
-  --t3:rgba(255,255,255,.66);
-  --a1:#7dd3fc;   /* 天蓝 */
-  --a2:#6ee7b7;   /* 薄荷绿 */
-  --a3:#a5b4fc;   /* 浅靛蓝 */
-  --glass-bg:linear-gradient(135deg, rgba(80,135,180,.30), rgba(50,95,145,.16));
-  --glass-border:rgba(255,255,255,.42);
-  --glass-hi:rgba(255,255,255,.5);
-  --shadow:0 18px 44px rgba(30,60,90,.28);
+  --t3:rgba(255,255,255,.68);
+  --a1:#a8e6cf;   /* 薄荷绿（参考图） */
+  --a2:#a8e6cf;
+  --a3:#8fb8ff;   /* 浅蓝 */
+  --glass-bg:rgba(255,255,255,.09);
+  --glass-border:rgba(255,255,255,.32);
+  --glass-hi:rgba(255,255,255,.6);
+  --shadow:0 22px 50px rgba(20,45,80,.26);
   --radius:22px;
   --font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
 }
@@ -33,58 +33,96 @@ body{
   line-height:1.6;
   overflow-x:hidden;
   min-height:100vh;
+  /* 参考图流体背景：左上浅蓝白亮区 + 左下薄荷绿 + 右上深蓝 + 右下靛蓝，有机咬合 + 光隙 */
   background:
-    radial-gradient(1000px 700px at 18% 12%, rgba(126,232,195,.7), transparent 60%),
-    radial-gradient(900px 650px at 85% 20%, rgba(94,178,255,.65), transparent 62%),
-    radial-gradient(800px 800px at 75% 88%, rgba(52,148,230,.6), transparent 62%),
-    radial-gradient(700px 600px at 30% 85%, rgba(129,218,245,.65), transparent 62%),
-    linear-gradient(160deg, #d8f2f5 0%, #bfe6f5 40%, #8fcdf0 72%, #66b4e4 100%);
+    radial-gradient(1000px 760px at 14% 10%, rgba(255,255,255,.95), transparent 68%),
+    radial-gradient(880px 760px at 4% 60%, rgba(190,240,214,.9) 0%, rgba(168,230,207,.85) 42%, transparent 74%),
+    radial-gradient(840px 760px at 93% 8%, rgba(42,82,152,.95) 0%, rgba(36,72,130,.9) 42%, transparent 74%),
+    radial-gradient(820px 820px at 97% 94%, rgba(27,58,107,.96) 0%, rgba(22,48,90,.92) 46%, transparent 76%),
+    linear-gradient(158deg, #f2f9fd 0%, #e3f2f8 34%, #cfe7f3 66%, #bcdcf0 100%);
   background-attachment:fixed;
 }
 
-/* ---------- 背景流体光斑（装饰） ---------- */
+/* ---------- 背景流体有机色块（参考图：非圆形、咬合曲线 + 光隙） ---------- */
 .bg-blob{
-  position:fixed;border-radius:50%;filter:blur(80px);
-  opacity:.5;pointer-events:none;z-index:0;
+  position:fixed;pointer-events:none;z-index:0;
+  filter:blur(84px);opacity:1;
 }
-.b1{width:520px;height:520px;left:-140px;top:-120px;background:radial-gradient(circle,#5eead4,transparent 70%);}
-.b2{width:480px;height:480px;right:-140px;top:24%;background:radial-gradient(circle,#60a5fa,transparent 70%);}
-.b3{width:560px;height:560px;left:30%;bottom:-200px;background:radial-gradient(circle,#38bdf8,transparent 70%);}
+.b1{ /* 左下薄荷绿大弧块（约40%画面） */
+  width:640px;height:580px;left:-7%;top:30%;
+  border-radius:64% 36% 58% 42% / 46% 62% 38% 54%;
+  background:radial-gradient(60% 55% at 38% 42%, #e4f9ee, #a8e6cf 52%, #7fd6b8 100%);
+}
+.b2{ /* 右上深蓝块（约35%画面，与薄荷绿咬合） */
+  width:700px;height:620px;right:-9%;top:-7%;
+  border-radius:42% 58% 40% 60% / 55% 42% 58% 45%;
+  background:radial-gradient(58% 52% at 62% 46%, #3a6bb4, #2a5298 55%, #1d3c78 100%);
+}
+.b3{ /* 右下靛蓝块（与左下水滴相连成闭环） */
+  width:580px;height:640px;right:-12%;bottom:-18%;
+  border-radius:58% 42% 62% 38% / 42% 60% 40% 58%;
+  background:radial-gradient(56% 58% at 58% 40%, #2a5590, #1b3a6b 58%, #12294d 100%);
+}
+.b4{ /* 色块间光隙：亮白高光带，模拟光线折射 */
+  width:520px;height:170px;left:28%;top:50%;
+  border-radius:50%;
+  background:linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.98) 46%, rgba(255,255,255,.06));
+  filter:blur(26px);opacity:1;
+  transform:rotate(-12deg);
+}
+.b5{ /* 左上主光源亮区 */
+  width:640px;height:420px;left:-10%;top:-12%;
+  border-radius:50%;
+  background:radial-gradient(52% 58% at 40% 45%, rgba(255,255,255,.98), rgba(240,248,255,.75) 60%, transparent 76%);
+  opacity:.95;
+}
 
-/* ---------- 玻璃面板基础 ---------- */
+/* ---------- 玻璃面板基础（参考图：高透白玻璃 + 内倒角 + 水膜高光 + 环境色投影） ---------- */
 .glass{
   position:relative;
   background:var(--glass-bg);
-  -webkit-backdrop-filter:blur(28px) saturate(200%);
-  backdrop-filter:blur(28px) saturate(200%);
-  border:1px solid var(--glass-border);
+  -webkit-backdrop-filter:blur(18px) saturate(180%);
+  backdrop-filter:blur(18px) saturate(180%);
+  border:1px solid rgba(255,255,255,.6);
   border-radius:var(--radius);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.42),
-    inset 0 2px 0 rgba(255,255,255,.55),
-    inset 0 -1px 0 rgba(255,255,255,.1),
-    inset 0 0 24px rgba(255,255,255,.06),
-    0 22px 50px rgba(25,70,110,.3),
-    0 4px 18px rgba(70,160,220,.18);
+    0 0 0 1px rgba(255,255,255,.3),
+    inset 0 0 0 1px rgba(255,255,255,.55),
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 2px 6px rgba(255,255,255,.3),
+    inset 0 -2px 0 rgba(255,255,255,.22),
+    inset 0 -16px 26px -12px rgba(15,50,100,.1),
+    inset 0 0 44px rgba(255,255,255,.1),
+    0 40px 80px -14px rgba(12,38,80,.42),
+    0 18px 36px -8px rgba(15,45,90,.3),
+    0 8px 18px rgba(15,45,90,.18),
+    0 0 34px rgba(140,205,250,.16);
   overflow:hidden;
 }
 .glass::before{
-  content:'';position:absolute;top:0;left:8%;right:8%;height:1px;z-index:1;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.75) 50%, transparent);
+  content:'';position:absolute;top:0;left:5%;right:5%;height:2px;z-index:1;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95) 50%, transparent);
   border-radius:50%;
-  opacity:.7;
+  opacity:.85;
+  filter:blur(.5px);
 }
 .glass::after{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.16), transparent 24%, transparent 66%, rgba(20,55,100,.22)),
-    radial-gradient(140% 70% at 20% 0%, rgba(255,255,255,.15), transparent 60%);
+    linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,.05) 24%, transparent 60%, rgba(15,50,105,.12)),
+    radial-gradient(120% 60% at 16% 0%, rgba(255,255,255,.25), transparent 56%),
+    radial-gradient(38px 14px at 78% 20%, rgba(255,255,255,.55), transparent 70%),
+    radial-gradient(24px 10px at 24% 44%, rgba(255,255,255,.45), transparent 72%),
+    radial-gradient(28px 11px at 64% 66%, rgba(255,255,255,.4), transparent 72%),
+    radial-gradient(18px 7px at 40% 84%, rgba(255,255,255,.35), transparent 72%),
+    radial-gradient(14px 6px at 88% 82%, rgba(255,255,255,.3), transparent 74%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' fill='%23ffffff' filter='url(%23n)' opacity='0.09'/></svg>");
 }
 .glass > *{position:relative;z-index:1;}
 .glass p,.glass .desc,.glass .clog-desc,.glass .work-card .name,.glass .section-title,
 .glass .hero-code,.glass .mp-track,.glass .mp-artist,
 .glass .nav-link,.glass .nav-logo,.glass .nav-footer,
-.glass .clog-date,.glass .avatar-label{text-shadow:0 1px 12px rgba(8,40,80,.5), 0 1px 3px rgba(8,40,80,.3);}
+.glass .clog-date,.glass .avatar-label{text-shadow:0 1px 2px rgba(10,35,70,.28), 0 0 1px rgba(255,255,255,.25);}
 
 /* 可 hover 的玻璃卡片：上浮 + 高光移动 */
 .glass-card{
@@ -92,12 +130,12 @@ body{
 }
 .glass-card:hover{
   transform:translateY(-5px);
-  background:linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.09));
+  background:rgba(255,255,255,.2);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.5),
+    inset 0 0 0 1px rgba(255,255,255,.48),
     inset 0 1px 0 rgba(255,255,255,.6),
-    inset 0 -1px 0 rgba(255,255,255,.1),
-    0 26px 60px rgba(0,0,0,.32);
+    inset 0 -14px 24px -12px rgba(15,50,100,.1),
+    0 32px 64px -10px rgba(20,50,100,.34);
 }
 .glass-card:hover::before{
   left:20%;right:20%;
@@ -210,19 +248,21 @@ body{
 .hero{padding:6px 0;}
 .hero-title{
   font-size:clamp(26px, 3.4vw, 40px);
-  font-weight:700;color:#fff;line-height:1.4;margin-bottom:18px;
+  font-weight:700;color:rgba(255,255,255,.94);line-height:1.4;margin-bottom:18px;
   letter-spacing:.5px;
+  text-shadow:0 1px 2px rgba(10,35,70,.3), 0 0 1px rgba(255,255,255,.35);
 }
 .hero-title .name-hl{color:var(--a3);}
 .hero-code{
   font-size:15px;color:var(--t1);
-  background:linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.28);
   border-radius:18px;
   padding:18px 22px;margin:6px 0 18px;max-width:720px;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.3),
-    0 20px 45px rgba(0,0,0,.22);
+    inset 0 0 0 1px rgba(255,255,255,.26),
+    inset 0 1px 0 rgba(255,255,255,.4),
+    0 22px 46px -8px rgba(20,50,100,.3);
   white-space:pre-wrap;word-break:break-word;
   line-height:2;
   -webkit-backdrop-filter:blur(20px) saturate(180%);
