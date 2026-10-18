@@ -11,9 +11,9 @@
    LIQUID GLASS 液态玻璃个人主页（Apple Liquid Glass 风格）
    ============================================================ */
 :root{
-  --t1:rgba(255,255,255,.96);
-  --t2:rgba(255,255,255,.85);
-  --t3:rgba(255,255,255,.68);
+  --t1:rgba(255,255,255,1);
+  --t2:rgba(255,255,255,.94);
+  --t3:rgba(255,255,255,.82);
   --a1:#a8e6cf;   /* 薄荷绿（参考图） */
   --a2:#a8e6cf;
   --a3:#8fb8ff;   /* 浅蓝 */
@@ -122,7 +122,9 @@ body{
 .glass p,.glass .desc,.glass .clog-desc,.glass .work-card .name,.glass .section-title,
 .glass .hero-code,.glass .mp-track,.glass .mp-artist,
 .glass .nav-link,.glass .nav-logo,.glass .nav-footer,
-.glass .clog-date,.glass .avatar-label{text-shadow:0 1px 2px rgba(10,35,70,.28), 0 0 1px rgba(255,255,255,.25);}
+.glass .clog-date,.glass .avatar-label{
+  text-shadow:0 1px 2px rgba(8,30,65,.6), 0 0 6px rgba(8,30,65,.35), 0 0 14px rgba(8,30,65,.22);
+}
 
 /* 可 hover 的玻璃卡片：上浮 + 高光移动 */
 .glass-card{
@@ -248,9 +250,9 @@ body{
 .hero{padding:6px 0;}
 .hero-title{
   font-size:clamp(26px, 3.4vw, 40px);
-  font-weight:700;color:rgba(255,255,255,.94);line-height:1.4;margin-bottom:18px;
+  font-weight:700;color:rgba(255,255,255,1);line-height:1.4;margin-bottom:18px;
   letter-spacing:.5px;
-  text-shadow:0 1px 2px rgba(10,35,70,.3), 0 0 1px rgba(255,255,255,.35);
+  text-shadow:0 2px 4px rgba(8,30,65,.65), 0 0 12px rgba(8,30,65,.4), 0 0 26px rgba(8,30,65,.25);
 }
 .hero-title .name-hl{color:var(--a3);}
 .hero-code{
@@ -271,7 +273,7 @@ body{
 .hero-code .k{color:var(--a2);font-weight:600;}
 .hero-code .v{color:#fff;font-weight:600;}
 .hero-code .s{color:var(--a3);}
-.hero-code .c{color:var(--t3);}
+.hero-code .c{color:#fff;font-weight:600;}
 
 /* ---- 玻璃按钮 ---- */
 .btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;}
