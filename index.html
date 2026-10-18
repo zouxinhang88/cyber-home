@@ -11,17 +11,17 @@
    LIQUID GLASS 液态玻璃个人主页（Apple Liquid Glass 风格）
    ============================================================ */
 :root{
-  --t1:rgba(255,255,255,.92);
-  --t2:rgba(255,255,255,.72);
-  --t3:rgba(255,255,255,.5);
-  --a1:#c4b5fd;   /* 浅紫 */
-  --a2:#67e8f9;   /* 青 */
-  --a3:#f9a8d4;   /* 粉 */
-  --glass-bg:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-  --glass-border:rgba(255,255,255,.24);
-  --glass-hi:rgba(255,255,255,.38);
-  --shadow:0 20px 50px rgba(0,0,0,.25);
-  --radius:20px;
+  --t1:rgba(255,255,255,.96);
+  --t2:rgba(255,255,255,.85);
+  --t3:rgba(255,255,255,.66);
+  --a1:#7dd3fc;   /* 天蓝 */
+  --a2:#6ee7b7;   /* 薄荷绿 */
+  --a3:#a5b4fc;   /* 浅靛蓝 */
+  --glass-bg:linear-gradient(135deg, rgba(80,135,180,.30), rgba(50,95,145,.16));
+  --glass-border:rgba(255,255,255,.42);
+  --glass-hi:rgba(255,255,255,.5);
+  --shadow:0 18px 44px rgba(30,60,90,.28);
+  --radius:22px;
   --font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -34,48 +34,57 @@ body{
   overflow-x:hidden;
   min-height:100vh;
   background:
-    radial-gradient(1100px 750px at 12% 8%, rgba(124,58,237,.55), transparent 62%),
-    radial-gradient(950px 700px at 88% 18%, rgba(219,39,119,.42), transparent 62%),
-    radial-gradient(900px 900px at 68% 90%, rgba(6,182,212,.38), transparent 62%),
-    linear-gradient(160deg, #0b0824 0%, #1e1b4b 42%, #312e81 72%, #4c1d95 100%);
+    radial-gradient(1000px 700px at 18% 12%, rgba(126,232,195,.7), transparent 60%),
+    radial-gradient(900px 650px at 85% 20%, rgba(94,178,255,.65), transparent 62%),
+    radial-gradient(800px 800px at 75% 88%, rgba(52,148,230,.6), transparent 62%),
+    radial-gradient(700px 600px at 30% 85%, rgba(129,218,245,.65), transparent 62%),
+    linear-gradient(160deg, #d8f2f5 0%, #bfe6f5 40%, #8fcdf0 72%, #66b4e4 100%);
   background-attachment:fixed;
 }
 
-/* ---------- 背景光斑（装饰） ---------- */
+/* ---------- 背景流体光斑（装饰） ---------- */
 .bg-blob{
-  position:fixed;border-radius:50%;filter:blur(90px);
-  opacity:.45;pointer-events:none;z-index:0;
+  position:fixed;border-radius:50%;filter:blur(80px);
+  opacity:.5;pointer-events:none;z-index:0;
 }
-.b1{width:460px;height:460px;left:-130px;top:-110px;background:radial-gradient(circle,#7c3aed,transparent 70%);}
-.b2{width:420px;height:420px;right:-120px;top:28%;background:radial-gradient(circle,#db2777,transparent 70%);}
-.b3{width:520px;height:520px;left:32%;bottom:-190px;background:radial-gradient(circle,#06b6d4,transparent 70%);}
+.b1{width:520px;height:520px;left:-140px;top:-120px;background:radial-gradient(circle,#5eead4,transparent 70%);}
+.b2{width:480px;height:480px;right:-140px;top:24%;background:radial-gradient(circle,#60a5fa,transparent 70%);}
+.b3{width:560px;height:560px;left:30%;bottom:-200px;background:radial-gradient(circle,#38bdf8,transparent 70%);}
 
 /* ---------- 玻璃面板基础 ---------- */
 .glass{
   position:relative;
   background:var(--glass-bg);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(200%);
+  backdrop-filter:blur(28px) saturate(200%);
   border:1px solid var(--glass-border);
   border-radius:var(--radius);
   box-shadow:
-    inset 0 0 0 1px var(--glass-hi),
-    inset 0 1px 0 rgba(255,255,255,.45),
-    inset 0 -1px 0 rgba(255,255,255,.08),
-    var(--shadow);
+    inset 0 0 0 1px rgba(255,255,255,.42),
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.1),
+    inset 0 0 24px rgba(255,255,255,.06),
+    0 22px 50px rgba(25,70,110,.3),
+    0 4px 18px rgba(70,160,220,.18);
   overflow:hidden;
 }
 .glass::before{
-  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;z-index:1;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
+  content:'';position:absolute;top:0;left:8%;right:8%;height:1px;z-index:1;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.75) 50%, transparent);
   border-radius:50%;
-  opacity:.9;
+  opacity:.7;
 }
 .glass::after{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,255,255,.12), transparent 28%, transparent 72%, rgba(255,255,255,.05));
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), transparent 24%, transparent 66%, rgba(20,55,100,.22)),
+    radial-gradient(140% 70% at 20% 0%, rgba(255,255,255,.15), transparent 60%);
 }
 .glass > *{position:relative;z-index:1;}
+.glass p,.glass .desc,.glass .clog-desc,.glass .work-card .name,.glass .section-title,
+.glass .hero-code,.glass .mp-track,.glass .mp-artist,
+.glass .nav-link,.glass .nav-logo,.glass .nav-footer,
+.glass .clog-date,.glass .avatar-label{text-shadow:0 1px 12px rgba(8,40,80,.5), 0 1px 3px rgba(8,40,80,.3);}
 
 /* 可 hover 的玻璃卡片：上浮 + 高光移动 */
 .glass-card{
@@ -127,16 +136,17 @@ body{
 .nav-list{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;}
 .nav-link{
   display:block;text-decoration:none;
-  font-size:14px;font-weight:500;color:var(--t2);
+  font-size:14px;font-weight:600;color:#fff;
   padding:11px 14px;border-radius:14px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
+  background:rgba(25,60,100,.22);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
   transition:all .25s ease;
 }
 .nav-link:hover,.nav-link.active{
   color:#fff;
-  background:rgba(255,255,255,.18);
-  border-color:rgba(255,255,255,.3);
+  background:rgba(255,255,255,.22);
+  border-color:rgba(255,255,255,.38);
   transform:translateX(3px);
 }
 .nav-link .sub{display:block;font-size:11px;opacity:.65;margin-top:2px;letter-spacing:1px;}
@@ -244,8 +254,8 @@ body{
 .glass-btn:active{transform:translateY(1px);}
 .glass-btn.pink{color:#ffe4f1;border-color:rgba(249,168,212,.5);box-shadow:inset 0 0 0 1px rgba(249,168,212,.3), inset 0 1px 0 rgba(255,255,255,.3), 0 10px 26px rgba(0,0,0,.18);}
 .glass-btn.pink:hover{background:rgba(249,168,212,.28);color:#fff;}
-.glass-btn.purple{color:#ede9fe;border-color:rgba(196,181,253,.5);box-shadow:inset 0 0 0 1px rgba(196,181,253,.3), inset 0 1px 0 rgba(255,255,255,.3), 0 10px 26px rgba(0,0,0,.18);}
-.glass-btn.purple:hover{background:rgba(196,181,253,.28);color:#fff;}
+.glass-btn.purple{color:#e0f2fe;border-color:rgba(125,211,252,.55);box-shadow:inset 0 0 0 1px rgba(125,211,252,.35), inset 0 1px 0 rgba(255,255,255,.3), 0 10px 26px rgba(15,60,100,.18);}
+.glass-btn.purple:hover{background:rgba(125,211,252,.25);color:#fff;}
 
 /* ---- 区块标题 ---- */
 .section-title{
@@ -337,7 +347,7 @@ body{
   font-size:16px;font-weight:700;color:#fff;
   margin-bottom:6px;
 }
-.work-card .desc{font-size:13px;color:var(--t2);line-height:1.5;}
+.work-card .desc{font-size:13.5px;font-weight:500;color:#fff;line-height:1.55;}
 .work-card .desc .hl{color:var(--a2);}
 .work-card .desc .hl2{color:var(--a3);}
 .card-enter{padding:8px 16px 2px;position:relative;z-index:1;}
@@ -399,13 +409,13 @@ body{
 .clog-meta{display:flex;align-items:center;gap:12px;}
 .clog-ver{
   font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;
-  background:rgba(196,181,253,.3);
-  border:1px solid rgba(196,181,253,.5);
+  background:rgba(125,211,252,.3);
+  border:1px solid rgba(125,211,252,.55);
   border-radius:10px;padding:3px 10px;
 }
 .clog-date{font-size:13px;color:var(--t3);}
-.clog-desc{font-size:14px;color:var(--t2);line-height:1.7;}
-.clog-desc b{color:#fff;font-weight:600;}
+.clog-desc{font-size:14px;font-weight:500;color:#fff;line-height:1.75;}
+.clog-desc b{color:#fff;font-weight:700;}
 
 /* ============ 管理后台 ============ */
 .admin-overlay{
@@ -475,7 +485,7 @@ body{
   border:1px solid rgba(255,255,255,.28);
   border-radius:18px;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.3), 0 12px 30px rgba(0,0,0,.22);
-  background:rgba(10,10,30,.5);
+  background:rgba(60,110,160,.3);
 }
 .upload-hint{font-size:13px;color:var(--t3);line-height:1.6;max-width:300px;}
 .admin-actions{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
