@@ -1,0 +1,13 @@
+# Cloudflare Pages 安全响应头
+# 说明：页面为单文件内联架构（内联 <style>/<script>/onclick），故 script-src/style-src 需保留 'unsafe-inline'；
+# 其余策略均收紧。CORS 使用白名单（绝不用 *），纯静态站通常无需跨域，示例仅按需放开。
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), notifications=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  # CORS 白名单示例（按实际需要放开，禁止使用 *）：
+  # Access-Control-Allow-Origin: https://zouxinhang88.github.io

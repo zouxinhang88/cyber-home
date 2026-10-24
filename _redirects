@@ -1,0 +1,8 @@
+# Cloudflare Pages 重定向规则
+# 全站强制 HTTPS：Cloudflare Pages 默认自动启用，无需规则。
+# 域名规范化（301 永久跳转）：按实际部署域名替换下方示例。
+# 默认 Pages 子域：
+https://cyber-home.pages.dev/* https://cyber-home.pages.dev/:splat 301
+# 自定义域示例（裸域 -> www，二选一启用并删除另一条）：
+# https://example.com/* https://www.example.com/:splat 301
+# https://www.example.com/* https://example.com/:splat 301

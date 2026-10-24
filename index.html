@@ -6,6 +6,14 @@
 <title>邹忻航 // 个人主页</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<!-- ============ 安全响应头 meta（本地直开兜底，生产以 _headers 为准） ============ -->
+<!-- CSP 说明：页面为单文件内联架构（内联 <style>/<script>/onclick），必须保留 'unsafe-inline' 才能保住全部功能；
+     其余均按最严格配置（禁 object/frame 嵌入、锁定 base-uri/form-action、强制 HTTPS 升级）。
+     若日后把 JS/CSS 抽离为外部文件，可删除 'unsafe-inline' 收紧为 script-src 'self'; style-src 'self'。 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), notifications=()">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
 <style>
 /* ============================================================
    LIQUID GLASS 液态玻璃个人主页（Apple Liquid Glass 风格）
@@ -35,11 +43,11 @@ body{
   min-height:100vh;
   /* 参考图流体背景：左上浅蓝白亮区 + 左下薄荷绿 + 右上深蓝 + 右下靛蓝，有机咬合 + 光隙 */
   background:
-    radial-gradient(1000px 760px at 14% 10%, rgba(255,255,255,.95), transparent 68%),
-    radial-gradient(880px 760px at 4% 60%, rgba(190,240,214,.9) 0%, rgba(168,230,207,.85) 42%, transparent 74%),
-    radial-gradient(840px 760px at 93% 8%, rgba(42,82,152,.95) 0%, rgba(36,72,130,.9) 42%, transparent 74%),
-    radial-gradient(820px 820px at 97% 94%, rgba(27,58,107,.96) 0%, rgba(22,48,90,.92) 46%, transparent 76%),
-    linear-gradient(158deg, #f2f9fd 0%, #e3f2f8 34%, #cfe7f3 66%, #bcdcf0 100%);
+    radial-gradient(1000px 760px at 14% 10%, rgba(255,255,255,.30), transparent 68%),
+    radial-gradient(880px 760px at 4% 60%, rgba(115,175,160,.42) 0%, rgba(100,155,138,.36) 42%, transparent 74%),
+    radial-gradient(840px 760px at 93% 8%, rgba(36,72,132,.85) 0%, rgba(30,62,112,.8) 42%, transparent 74%),
+    radial-gradient(820px 820px at 97% 94%, rgba(22,50,92,.88) 0%, rgba(18,42,78,.86) 46%, transparent 76%),
+    linear-gradient(158deg, #8098ae 0%, #62809c 34%, #4a6b8c 66%, #3c5d7e 100%);
   background-attachment:fixed;
 }
 
@@ -51,102 +59,143 @@ body{
 .b1{ /* 左下薄荷绿大弧块（约40%画面） */
   width:640px;height:580px;left:-7%;top:30%;
   border-radius:64% 36% 58% 42% / 46% 62% 38% 54%;
-  background:radial-gradient(60% 55% at 38% 42%, #e4f9ee, #a8e6cf 52%, #7fd6b8 100%);
+  background:radial-gradient(60% 55% at 38% 42%, #c8e6d8, #79bda3 52%, #4f9a80 100%);
 }
-.b2{ /* 右上深蓝块（约35%画面，与薄荷绿咬合） */
+.b2{ /* 右上柔蓝块（约35%画面，与薄荷绿咬合） */
   width:700px;height:620px;right:-9%;top:-7%;
   border-radius:42% 58% 40% 60% / 55% 42% 58% 45%;
-  background:radial-gradient(58% 52% at 62% 46%, #3a6bb4, #2a5298 55%, #1d3c78 100%);
+  background:radial-gradient(58% 52% at 62% 46%, #5580b0, #4170a0 55%, #2f5a88 100%);
 }
-.b3{ /* 右下靛蓝块（与左下水滴相连成闭环） */
+.b3{ /* 右下柔靛块（与左下水滴相连成闭环） */
   width:580px;height:640px;right:-12%;bottom:-18%;
   border-radius:58% 42% 62% 38% / 42% 60% 40% 58%;
-  background:radial-gradient(56% 58% at 58% 40%, #2a5590, #1b3a6b 58%, #12294d 100%);
+  background:radial-gradient(56% 58% at 58% 40%, #4f7aa8, #3d6a98 58%, #2d5580 100%);
 }
 .b4{ /* 色块间光隙：亮白高光带，模拟光线折射 */
   width:520px;height:170px;left:28%;top:50%;
   border-radius:50%;
-  background:linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,.98) 46%, rgba(255,255,255,.06));
-  filter:blur(26px);opacity:1;
+  background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.42) 46%, rgba(255,255,255,.05));
+  filter:blur(26px);opacity:.55;
   transform:rotate(-12deg);
 }
 .b5{ /* 左上主光源亮区 */
   width:640px;height:420px;left:-10%;top:-12%;
   border-radius:50%;
-  background:radial-gradient(52% 58% at 40% 45%, rgba(255,255,255,.98), rgba(240,248,255,.75) 60%, transparent 76%);
-  opacity:.95;
+  background:radial-gradient(52% 58% at 40% 45%, rgba(255,255,255,.6), rgba(220,232,244,.45) 60%, transparent 76%);
+  opacity:.72;
 }
 
-/* ---------- 玻璃面板基础（参考图：高透白玻璃 + 内倒角 + 水膜高光 + 环境色投影） ---------- */
+/* ---------- 背景光斑持续流动（任何部分不许静止：位移+呼吸缩放+轻微旋转交错）
+   transform 用 var(--px/--py) 承接 JS 滚动视差偏移，动画与视差可叠加，全程 GPU 友好 */
+@keyframes blob-drift{
+  0%,100%{ transform:translate3d(var(--px,0px), var(--py,0px),0) rotate(0deg) scale(1); }
+  25%{ transform:translate3d(calc(var(--px,0px) + 4vw), calc(var(--py,0px) + 2.4vh),0) rotate(2.2deg) scale(1.05); }
+  50%{ transform:translate3d(calc(var(--px,0px) + 1.6vw), calc(var(--py,0px) + 4.6vh),0) rotate(-1.6deg) scale(1.09); }
+  75%{ transform:translate3d(calc(var(--px,0px) - 3.2vw), calc(var(--py,0px) + 1.6vh),0) rotate(1.1deg) scale(1.04); }
+}
+@keyframes blob-breathe{
+  0%,100%{ transform:translate3d(var(--px,0px), var(--py,0px),0) scale(1); }
+  33%{ transform:translate3d(calc(var(--px,0px) - 2.6vw), calc(var(--py,0px) - 2.2vh),0) scale(1.07); }
+  66%{ transform:translate3d(calc(var(--px,0px) + 2.2vw), calc(var(--py,0px) + 1.6vh),0) scale(.95); }
+}
+@keyframes blob-light-drift{
+  0%,100%{ transform:translate3d(var(--px,0px), var(--py,0px),0) rotate(-12deg) scaleX(1); }
+  50%{ transform:translate3d(calc(var(--px,0px) + 3vw), calc(var(--py,0px) - 1.4vh),0) rotate(-9deg) scaleX(1.18); }
+}
+.b1{ animation:blob-drift 26s ease-in-out infinite; will-change:transform; }
+.b2{ animation:blob-drift 34s ease-in-out infinite reverse; will-change:transform; }
+.b3{ animation:blob-breathe 22s ease-in-out infinite; will-change:transform; }
+.b4{ animation:blob-light-drift 30s ease-in-out infinite; will-change:transform; }
+.b5{ animation:blob-breathe 18s ease-in-out infinite reverse; will-change:transform; }
+
+
+/* ---------- 玻璃面板（Apple Liquid Glass 仿真 v3：锐利折射高光 + 厚度渐变 + 极淡环境光斑 + 流体圆角 + 多层阴影） ---------- */
 .glass{
   position:relative;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,.12), rgba(235,245,255,.05) 42%, rgba(180,205,255,.04) 100%),
-    var(--glass-bg);
-  -webkit-backdrop-filter:blur(12px) saturate(280%) brightness(1.1) contrast(1.08);
-  backdrop-filter:blur(12px) saturate(280%) brightness(1.1) contrast(1.08);
-  filter:url(#lg-refract);
-  border:1px solid rgba(255,255,255,.7);
-  border-radius:var(--radius);
+  will-change:transform; /* GPU 友好：hover 上浮走合成层 */
+  background:rgba(255,255,255,.05);
+  -webkit-backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+  backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+  border-radius:calc(var(--radius) + 4px) calc(var(--radius) + 4px) calc(var(--radius) - 6px) calc(var(--radius) - 6px);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,.35),
-    inset 0 0 0 1px rgba(255,255,255,.6),
-    inset 0 1px 0 rgba(255,255,255,.8),
-    inset 0 2px 6px rgba(255,255,255,.35),
-    inset 0 -3px 0 rgba(255,255,255,.18),
-    inset 0 -22px 34px -14px rgba(12,42,88,.16),
-    inset 0 0 46px rgba(255,255,255,.12),
-    inset 0 12px 30px -14px rgba(0,0,0,.14),
-    0 40px 80px -14px rgba(12,38,80,.42),
-    0 18px 36px -8px rgba(15,45,90,.3),
-    0 8px 18px rgba(15,45,90,.18),
-    0 0 34px rgba(140,205,250,.16);
+    /* 厚度：顶部锐利折射高光（2px 折射线 + 高光晕） */
+    inset 0 2px 0 rgba(255,255,255,1),
+    inset 0 5px 11px -2px rgba(255,255,255,.48),
+    /* 侧边边缘反射（弧形玻璃感）+ 侧壁暗影（体积，左右对称包裹） */
+    inset 2px 0 6px -2px rgba(255,255,255,.3),
+    inset -2px 0 6px -2px rgba(255,255,255,.3),
+    inset 4px 0 13px -4px rgba(15,50,105,.22),
+    inset -4px 0 13px -4px rgba(15,50,105,.24),
+    /* 底部内侧暗影（厚度）+ 极淡底高光 */
+    inset 0 -1px 0 rgba(255,255,255,.25),
+    inset 0 -26px 44px -26px rgba(15,50,105,.34),
+    /* 玻璃表面泛光 */
+    inset 0 12px 34px -16px rgba(255,255,255,.34),
+    /* 外发光包裹（四周均匀极淡发光） */
+    0 0 0 1.5px rgba(255,255,255,.32), /* 半透明白描边（任务清单第 2 项） */
+    0 0 0 4px rgba(255,255,255,.06),
+    0 0 12px -2px rgba(130,185,255,.08),
+    0 0 30px -6px rgba(130,185,255,.18),
+    /* 环境投影：贴合层 + 主投影层 + 远端柔光层 */
+    0 1px 2px rgba(15,45,90,.08),
+    0 12px 28px -10px rgba(15,45,90,.16),
+    0 34px 70px -30px rgba(15,45,90,.32);
   overflow:hidden;
 }
 .glass::before{
-  content:'';position:absolute;top:0;left:5%;right:5%;height:2px;z-index:1;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.95) 50%, transparent);
-  border-radius:50%;
-  opacity:.85;
-  filter:blur(.5px);
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg, #fff 0%, #fff 62%, rgba(255,255,255,.55) 88%, rgba(255,255,255,.18) 100%);
+  box-shadow:0 1px 3px rgba(10,30,60,.28);
+  opacity:1;
 }
 .glass::after{
   content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  border-radius:inherit;
   background:
-    linear-gradient(115deg, transparent 41%, rgba(255,255,255,.2) 47%, rgba(255,255,255,.08) 52%, transparent 57%),
-    linear-gradient(180deg, rgba(255,255,255,.3), rgba(255,255,255,.05) 24%, transparent 60%, rgba(15,50,105,.12)),
-    radial-gradient(120% 60% at 16% 0%, rgba(255,255,255,.25), transparent 56%),
-    radial-gradient(38px 14px at 78% 20%, rgba(255,255,255,.55), transparent 70%),
-    radial-gradient(24px 10px at 24% 44%, rgba(255,255,255,.45), transparent 72%),
-    radial-gradient(28px 11px at 64% 66%, rgba(255,255,255,.4), transparent 72%),
-    radial-gradient(18px 7px at 40% 84%, rgba(255,255,255,.35), transparent 72%),
-    radial-gradient(14px 6px at 88% 82%, rgba(255,255,255,.3), transparent 74%),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' fill='%23ffffff' filter='url(%23n)' opacity='0.13'/></svg>");
+    /* 玻璃颗粒噪点（SVG feTurbulence，极低 alpha，模拟玻璃晶体颗粒） */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* 厚度渐变：顶部亮 → 中部透 → 底部暗（多段平滑） */
+    linear-gradient(180deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.09) 18%, rgba(255,255,255,.03) 34%, transparent 50%, rgba(15,50,105,.015) 68%, rgba(15,50,105,.05) 84%, rgba(15,50,105,.11) 100%),
+    /* 顶部环境光渗入 */
+    radial-gradient(120% 60% at 50% -10%, rgba(255,255,255,.12), transparent 55%),
+    /* 左上主光源弧面反射 */
+    radial-gradient(90% 55% at 22% 4%, rgba(255,255,255,.1), transparent 62%),
+    /* 镜面高光泽：上部弧形窗式反光向后延伸（Apple gloss 关键） */
+    radial-gradient(75% 62% at 32% 0%, rgba(255,255,255,.3), transparent 72%),
+    /* 极淡微光斑（避开左上头像区，分散到右侧与下部） */
+    radial-gradient(38% 20% at 72% 16%, rgba(255,255,255,.04), transparent 70%),
+    radial-gradient(42% 22% at 86% 50%, rgba(180,210,255,.035), transparent 72%),
+    radial-gradient(30% 16% at 58% 82%, rgba(255,255,255,.03), transparent 70%),
+    /* GGX 近似微表面高光：高光位置随光标（视角）移动，模拟菲涅尔边缘高光跟随
+       --gx/--gy 由 JS 在 mousemove/touchmove 实时更新（纯 CSS 无法真正随视角，此为最接近手法） */
+    radial-gradient(70% 46% at var(--gx,30%) var(--gy,8%), rgba(255,255,255,.34), rgba(255,255,255,.1) 44%, transparent 70%);
 }
 .glass > *{position:relative;z-index:1;}
-.glass p,.glass .desc,.glass .clog-desc,.glass .work-card .name,.glass .section-title,
+.glass p,.glass .desc,.glass .work-card .name,.glass .section-title,
 .glass .hero-code,.glass .mp-track,.glass .mp-artist,
 .glass .nav-link,.glass .nav-logo,.glass .nav-footer,
-.glass .clog-date,.glass .avatar-label{
+.glass .avatar-label{
   text-shadow:0 1px 1px rgba(6,24,55,.8), 0 1px 3px rgba(8,30,65,.7), 0 0 8px rgba(8,30,65,.4), 0 0 16px rgba(8,30,65,.24);
 }
 
-/* 可 hover 的玻璃卡片：上浮 + 高光移动 */
+/* 可 hover 的玻璃卡片：上浮 + 微放大（flexing 流体感）+ 高光增强 */
 .glass-card{
-  transition:transform .35s cubic-bezier(.2,.8,.3,1), box-shadow .35s ease, background .35s ease;
+  transition:transform .5s cubic-bezier(.34,1.36,.64,1), box-shadow .5s ease, background .5s ease, border-radius .5s ease;
 }
 .glass-card:hover{
-  transform:translateY(-5px);
-  background:rgba(255,255,255,.2);
+  transform:translateY(-3px) scale(1.006);
+  border-radius:calc(var(--radius) + 2px) calc(var(--radius) + 2px) calc(var(--radius) - 8px) calc(var(--radius) - 8px);
+  background:rgba(255,255,255,.12);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.48),
-    inset 0 1px 0 rgba(255,255,255,.6),
-    inset 0 -14px 24px -12px rgba(15,50,100,.1),
-    0 32px 64px -10px rgba(20,50,100,.34);
+    inset 0 2px 0 rgba(255,255,255,1),
+    inset 0 6px 14px -2px rgba(255,255,255,.55),
+    inset 0 -22px 38px -22px rgba(15,50,105,.34),
+    0 24px 60px -24px rgba(20,55,110,.4);
 }
 .glass-card:hover::before{
-  left:20%;right:20%;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,1), transparent);
+  opacity:1;
+  left:10%;right:10%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent);
 }
 
 /* ---------- 布局 ---------- */
@@ -183,14 +232,14 @@ body{
   display:block;text-decoration:none;
   font-size:14px;font-weight:600;color:#fff;
   padding:11px 14px;border-radius:14px;
-  background:rgba(25,60,100,.22);
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
-  transition:all .25s ease;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.2), inset 0 1px 0 rgba(255,255,255,.22);
+  transition:transform .35s cubic-bezier(.34,1.36,.64,1), background .25s ease, border-color .25s ease;
 }
 .nav-link:hover,.nav-link.active{
   color:#fff;
-  background:rgba(255,255,255,.22);
+  background:rgba(255,255,255,.2);
   border-color:rgba(255,255,255,.38);
   transform:translateX(3px);
 }
@@ -221,28 +270,44 @@ body{
   display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
 }
 .status-line{
-  font-size:14px;color:var(--t2);line-height:2;
+  font-size:14px;color:#fff;line-height:2;
+  display:inline-block;
+  background:rgba(16,42,80,.55);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:18px;
+  padding:10px 18px;
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.25), inset 0 1px 0 rgba(255,255,255,.3), 0 14px 30px -14px rgba(16,42,80,.4);
+  -webkit-backdrop-filter:blur(8px) saturate(170%);
+  backdrop-filter:blur(8px) saturate(170%);
 }
-.status-line .ok{color:var(--a2);font-weight:600;}
+.status-line .ok{color:#7fe3c0;font-weight:600;}
 .status-line .warn{color:var(--a3);font-weight:600;}
 
 /* 玻璃头像 */
 .avatar-wrap{position:relative;flex-shrink:0;}
 .avatar-frame{
   width:128px;height:128px;padding:6px;
-  background:rgba(255,255,255,.14);
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.26);
+  background:rgba(255,255,255,.08);
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.35),
-    inset 0 1px 0 rgba(255,255,255,.5),
-    0 20px 50px rgba(0,0,0,.28);
-  image-rendering:pixelated;
+    inset 0 0 0 .5px rgba(255,255,255,.4),
+    inset 0 1px 0 rgba(255,255,255,.45),
+    0 16px 40px -18px rgba(20,55,110,.32);
   position:relative;z-index:2;
-  -webkit-backdrop-filter:blur(16px) saturate(180%);
-  backdrop-filter:blur(16px) saturate(180%);
+-webkit-backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
 }
-.avatar-frame canvas{width:100%;height:100%;display:block;border-radius:18px;}
+.avatar-frame canvas{
+  width:100%;height:100%;display:block;border-radius:50%;
+  image-rendering:smooth;
+  filter:blur(.4px) saturate(1.15) brightness(1.05) contrast(.98);
+}
+.avatar-frame::after{
+  content:'';position:absolute;top:8px;left:14%;right:14%;height:2px;z-index:3;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.85) 50%, transparent);
+  border-radius:50%;filter:blur(.6px);opacity:.55;pointer-events:none;
+}
 .avatar-label{
   font-size:13px;font-weight:600;color:var(--t2);
   text-align:center;margin-top:10px;letter-spacing:2px;
@@ -262,19 +327,64 @@ body{
 .hero-title .name-hl{color:var(--a3);}
 .hero-code{
   font-size:15px;color:var(--t1);
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.28);
-  border-radius:18px;
+  position:relative;overflow:hidden;will-change:transform;
+  background:
+    /* 厚度渐变：顶部亮 → 中部透 → 底部暗（多段平滑，低白雾保通透） */
+    linear-gradient(180deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.05) 18%, rgba(255,255,255,.02) 34%, transparent 50%, rgba(15,50,105,.015) 68%, rgba(15,50,105,.05) 84%, rgba(15,50,105,.11) 100%),
+    /* 顶部环境光渗入 */
+    radial-gradient(120% 60% at 50% -10%, rgba(255,255,255,.1), transparent 55%),
+    /* 镜面高光泽：上部弧形窗式反光向后延伸 */
+    radial-gradient(75% 62% at 32% 0%, rgba(255,255,255,.26), transparent 72%),
+    rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:22px;
   padding:18px 22px;margin:6px 0 18px;max-width:720px;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.26),
-    inset 0 1px 0 rgba(255,255,255,.4),
-    0 22px 46px -8px rgba(20,50,100,.3);
+    /* 顶部锐利折射高光（2px 折射线 + 高光晕） */
+    inset 0 2px 0 rgba(255,255,255,1),
+    inset 0 5px 11px -2px rgba(255,255,255,.48),
+    /* 侧壁内壁（左右深色，玻璃厚度） */
+    inset 2px 0 5px -2px rgba(8,26,58,.55),
+    inset -2px 0 5px -2px rgba(8,26,58,.55),
+    /* 底部内壁 + 厚度暗影 */
+    inset 0 -8px 14px -5px rgba(8,26,58,.5),
+    inset 0 -26px 44px -26px rgba(15,50,105,.34),
+    /* 玻璃表面泛光 */
+    inset 0 12px 34px -16px rgba(255,255,255,.34),
+    /* 外发光包裹（四周均匀极淡发光） */
+    0 0 0 1px rgba(255,255,255,.05),
+    0 0 12px -2px rgba(130,185,255,.08),
+    0 0 30px -6px rgba(130,185,255,.18),
+    /* 环境投影 */
+    0 1px 2px rgba(15,45,90,.08),
+    0 12px 28px -10px rgba(15,45,90,.16),
+    0 34px 70px -30px rgba(15,45,90,.32);
   white-space:pre-wrap;word-break:break-word;
   line-height:2;
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  backdrop-filter:blur(20px) saturate(180%);
+-webkit-backdrop-filter:blur(16px) saturate(180%) brightness(1.12);
+backdrop-filter:blur(16px) saturate(180%) brightness(1.12);
 }
+.hero-code::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:4;pointer-events:none;
+  background:linear-gradient(90deg, rgba(255,255,255,.08), #fff 12%, #fff 88%, rgba(255,255,255,.08));
+  box-shadow:0 2px 0 rgba(0,0,0,.62);
+  opacity:1;
+}
+.hero-code::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:22px;z-index:1;pointer-events:none;
+  border-radius:22px 22px 0 0;
+  background:radial-gradient(85% 130% at 50% -8%, rgba(255,255,255,.36), rgba(255,255,255,.12) 52%, transparent 76%);
+}
+/* ---- hero-code WebGL 玻璃渲染覆盖层（动态折射 / 环境反射 / GGX / SSS / 色散） ----
+   canvas 是 profile-code 的兄弟节点（避免被 renderProfile() 的 innerHTML 覆盖），
+   位置/尺寸由 JS 每帧按 hero-code 同步，精确贴合。 */
+.hero{position:relative;}
+.glass-canvas{
+  position:absolute;
+  z-index:2;pointer-events:none;border-radius:inherit;
+  display:block;
+}
+.hero-code > span{position:relative;z-index:3;} /* 文本内容保持在玻璃效果之上 */
 .hero-code .k{color:var(--a2);font-weight:600;}
 .hero-code .v{color:#fff;font-weight:600;}
 .hero-code .s{color:var(--a3);}
@@ -284,19 +394,21 @@ body{
 .btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;}
 .glass-btn{
   font-size:14px;font-weight:600;color:var(--t1);
-  background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.26);
-  border-radius:14px;
+  will-change:transform;
+  /* 光标跟随 GGX 高光（--gx/--gy 由 JS 更新；底层保留半透明白） */
+  background:radial-gradient(120% 130% at var(--gx,50%) var(--gy,0%), rgba(255,255,255,.34), rgba(255,255,255,.1) 46%, transparent 74%), rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:16px;
   padding:11px 20px;cursor:pointer;text-decoration:none;display:inline-block;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.25), inset 0 1px 0 rgba(255,255,255,.35), 0 10px 26px rgba(0,0,0,.18);
-  transition:all .25s ease;text-align:center;
-  -webkit-backdrop-filter:blur(14px) saturate(160%);
-  backdrop-filter:blur(14px) saturate(160%);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.9), inset 0 4px 9px -2px rgba(255,255,255,.38), inset 0 -8px 12px -6px rgba(8,26,58,.4), 0 10px 24px -12px rgba(20,55,110,.3);
+  transition:transform .4s cubic-bezier(.34,1.36,.64,1), background .3s ease, box-shadow .4s ease;text-align:center;
+-webkit-backdrop-filter:blur(22px) saturate(180%) brightness(1.12);
+backdrop-filter:blur(22px) saturate(180%) brightness(1.12);
 }
 .glass-btn:hover{
-  background:rgba(255,255,255,.24);
+  background:radial-gradient(120% 130% at var(--gx,50%) var(--gy,0%), rgba(255,255,255,.42), rgba(255,255,255,.14) 46%, transparent 74%), rgba(255,255,255,.18);
   transform:translateY(-2px);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.45), inset 0 1px 0 rgba(255,255,255,.55), 0 16px 34px rgba(0,0,0,.26);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,1), inset 0 5px 11px -2px rgba(255,255,255,.5), inset 0 -10px 14px -6px rgba(8,26,58,.46), 0 16px 34px -16px rgba(20,55,110,.34);
 }
 .glass-btn:active{transform:translateY(1px);}
 .glass-btn.pink{color:#ffe4f1;border-color:rgba(249,168,212,.5);box-shadow:inset 0 0 0 1px rgba(249,168,212,.3), inset 0 1px 0 rgba(255,255,255,.3), 0 10px 26px rgba(0,0,0,.18);}
@@ -323,7 +435,11 @@ body{
   padding:12px;
   display:flex;flex-direction:column;align-items:center;gap:8px;
   text-align:center;
+  will-change:transform;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1);
 }
+.mini-player:hover{ transform:translateY(-3px); }
+.mini-player:active{ transform:translateY(0) scale(.98); }
 .mp-head{
   font-size:11px;font-weight:700;color:var(--a2);
   letter-spacing:2px;
@@ -345,22 +461,22 @@ body{
 .mp-btn{
   font-size:11px;font-weight:700;color:var(--t1);
   background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:9px;padding:6px 7px;cursor:pointer;line-height:1;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
-  transition:all .2s ease;
+  border:1px solid rgba(255,255,255,.24);
+  border-radius:10px;padding:6px 7px;cursor:pointer;line-height:1;
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.2), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .35s cubic-bezier(.34,1.36,.64,1), background .25s ease;
 }
-.mp-btn:hover{background:rgba(255,255,255,.26);color:#fff;}
+.mp-btn:hover{background:rgba(255,255,255,.22);color:#fff;}
 .mp-play{
   font-size:11px;font-weight:700;color:#fff;
-  background:linear-gradient(135deg, rgba(196,181,253,.5), rgba(103,232,249,.45));
-  border:1px solid rgba(255,255,255,.35);
-  border-radius:10px;padding:8px 9px;cursor:pointer;line-height:1;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.3), 0 8px 20px rgba(0,0,0,.2);
-  transition:all .2s ease;
+  background:linear-gradient(135deg, rgba(196,181,253,.45), rgba(103,232,249,.4));
+  border:1px solid rgba(255,255,255,.32);
+  border-radius:11px;padding:8px 9px;cursor:pointer;line-height:1;
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.28), inset 0 1px 0 rgba(255,255,255,.3), 0 8px 18px -10px rgba(30,60,110,.4);
+  transition:transform .35s cubic-bezier(.34,1.36,.64,1), background .25s ease;
 }
-.mp-play:hover{transform:translateY(-1px);background:linear-gradient(135deg, rgba(196,181,253,.7), rgba(103,232,249,.65));}
-.mp-play.paused{background:linear-gradient(135deg, rgba(249,168,212,.55), rgba(196,181,253,.5));}
+.mp-play:hover{transform:translateY(-1px);background:linear-gradient(135deg, rgba(196,181,253,.6), rgba(103,232,249,.55));}
+.mp-play.paused{background:linear-gradient(135deg, rgba(249,168,212,.5), rgba(196,181,253,.45));}
 
 /* ---- 作品网格 ---- */
 .works-grid{
@@ -370,6 +486,17 @@ body{
   position:relative;
   cursor:pointer;overflow:hidden;
   padding:0 0 14px;
+}
+/* ---- 玻璃卡片交互：hover/触摸上浮 + 轻微形变 + 松手惯性回弹（GPU 友好 transform） ---- */
+.glass-card{
+  will-change:transform;
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1), box-shadow .45s ease;
+}
+.glass-card:hover{ transform:translateY(-5px); }
+.glass-card:active{ transform:translateY(-1px) scale(.985); } /* 触摸/按压轻微形变 */
+@media (hover:none){
+  .glass-card{ transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+  .glass-card:active{ transform:translateY(-2px) scale(.98); }
 }
 .work-card .thumb{
   height:130px;margin:0;
@@ -384,8 +511,8 @@ body{
   border:1px solid rgba(255,255,255,.3);
   border-radius:9px;
   padding:4px 9px;
-  -webkit-backdrop-filter:blur(8px);
-  backdrop-filter:blur(8px);
+-webkit-backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
 }
 .work-card .tag.b{background:rgba(103,232,249,.28);border-color:rgba(103,232,249,.5);}
 .work-card .tag.p{background:rgba(249,168,212,.28);border-color:rgba(249,168,212,.5);}
@@ -431,48 +558,16 @@ body{
 }
 .footer .hack{color:var(--t2);cursor:pointer;user-select:none;}
 .footer .hack:hover{color:#fff;}
-
-/* ============ 更新日志 / CHANGELOG ============ */
-.changelog{
-  padding:8px 0 2px;
-}
-.changelog-list{
-  display:flex;flex-direction:column;gap:16px;
-}
-.clog-item{
-  display:flex;gap:18px;align-items:stretch;
-  padding:14px;
-}
-.clog-img{
-  width:180px;flex-shrink:0;
-  border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22), 0 12px 30px rgba(0,0,0,.2);
-  background:linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
-  display:flex;align-items:center;justify-content:center;
-}
-.clog-img img{width:100%;height:auto;display:block;border-radius:15px;}
-.clog-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;}
-.clog-meta{display:flex;align-items:center;gap:12px;}
-.clog-ver{
-  font-size:14px;font-weight:700;color:#fff;letter-spacing:1px;
-  background:rgba(125,211,252,.3);
-  border:1px solid rgba(125,211,252,.55);
-  border-radius:10px;padding:3px 10px;
-}
-.clog-date{font-size:13px;color:var(--t3);}
 .footer,.upload-hint,.contact-tip{
   text-shadow:0 1px 2px rgba(6,24,55,.95), 0 0 5px rgba(8,30,65,.85);
 }
-.clog-desc{font-size:14px;font-weight:500;color:#fff;line-height:1.75;}
-.clog-desc b{color:#fff;font-weight:700;}
 
 /* ============ 管理后台 ============ */
 .admin-overlay{
   position:fixed;inset:0;z-index:100;display:none;
-  background:rgba(8,8,26,.55);
-  -webkit-backdrop-filter:blur(24px) saturate(140%);
-  backdrop-filter:blur(24px) saturate(140%);
+  background:rgba(10,16,38,.42);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  backdrop-filter:blur(14px) saturate(140%);
   justify-content:center;align-items:center;
   padding:20px;
 }
@@ -481,15 +576,15 @@ body{
 .admin-panel{
   width:min(680px,94vw);max-height:88vh;overflow-y:auto;
   padding:30px;
-  background:linear-gradient(135deg, rgba(60,52,110,.72), rgba(30,28,70,.78));
-  border:1px solid rgba(255,255,255,.26);
-  border-radius:24px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:26px;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.35),
-    inset 0 1px 0 rgba(255,255,255,.4),
-    0 30px 70px rgba(0,0,0,.4);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);
-  backdrop-filter:blur(28px) saturate(180%);
+    inset 0 0 0 .5px rgba(255,255,255,.4),
+    inset 0 1px 0 rgba(255,255,255,.42),
+    0 18px 44px -18px rgba(20,55,110,.3);
+-webkit-backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
 }
 .admin-panel h2{
   font-size:18px;font-weight:700;color:#fff;
@@ -524,18 +619,13 @@ body{
   box-shadow:inset 0 0 0 1px rgba(196,181,253,.3);
 }
 .upload-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-.px-check{
-  font-size:13px;color:var(--t2);
-  display:flex;align-items:center;gap:6px;cursor:pointer;
-}
-.px-check input{accent-color:#a78bfa;width:14px;height:14px;cursor:pointer;}
 .upload-preview{display:flex;align-items:center;gap:14px;margin-top:8px;flex-wrap:wrap;}
 .upload-preview canvas{
-  width:132px;height:132px;image-rendering:pixelated;
-  border:1px solid rgba(255,255,255,.28);
-  border-radius:18px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.3), 0 12px 30px rgba(0,0,0,.22);
-  background:rgba(60,110,160,.3);
+  width:132px;height:132px;
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:20px;
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.38), inset 0 1px 0 rgba(255,255,255,.4), 0 12px 28px -16px rgba(20,55,110,.3);
+  background:rgba(120,170,215,.25);
 }
 .upload-hint{font-size:13px;color:var(--t3);line-height:1.6;max-width:300px;}
 .admin-actions{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;}
@@ -546,15 +636,15 @@ body{
   width:min(380px,94vw);
   padding:32px;
   text-align:center;
-  background:linear-gradient(135deg, rgba(60,52,110,.75), rgba(30,28,70,.8));
-  border:1px solid rgba(255,255,255,.26);
-  border-radius:24px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:26px;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.35),
-    inset 0 1px 0 rgba(255,255,255,.4),
-    0 30px 70px rgba(0,0,0,.4);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);
-  backdrop-filter:blur(28px) saturate(180%);
+    inset 0 0 0 .5px rgba(255,255,255,.4),
+    inset 0 1px 0 rgba(255,255,255,.42),
+    0 18px 44px -18px rgba(20,55,110,.3);
+-webkit-backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
 }
 .login-box h3{
   font-size:16px;font-weight:700;color:#fff;
@@ -594,15 +684,15 @@ body{
   width:min(640px,94vw);
   padding:30px;
   text-align:left;
-  background:linear-gradient(135deg, rgba(60,52,110,.75), rgba(30,28,70,.8));
-  border:1px solid rgba(255,255,255,.26);
-  border-radius:24px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:26px;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.35),
-    inset 0 1px 0 rgba(255,255,255,.4),
-    0 30px 70px rgba(0,0,0,.4);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);
-  backdrop-filter:blur(28px) saturate(180%);
+    inset 0 0 0 .5px rgba(255,255,255,.4),
+    inset 0 1px 0 rgba(255,255,255,.42),
+    0 18px 44px -18px rgba(20,55,110,.3);
+-webkit-backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
 }
 .contact-panel h2{
   font-size:18px;font-weight:700;color:#fff;
@@ -645,14 +735,14 @@ body{
 .toast{
   position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
   z-index:200;
-  background:rgba(40,36,80,.85);
+  background:rgba(40,50,85,.65);
   color:#fff;font-size:14px;letter-spacing:.5px;
   border:1px solid rgba(255,255,255,.3);
-  border-radius:14px;padding:12px 24px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.25), 0 18px 40px rgba(0,0,0,.35);
+  border-radius:16px;padding:12px 24px;
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.3), 0 14px 32px -14px rgba(20,55,110,.35);
   opacity:0;pointer-events:none;transition:opacity .25s ease;
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  backdrop-filter:blur(20px) saturate(180%);
+-webkit-backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
+backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
 }
 .toast.show{opacity:1;}
 
@@ -673,9 +763,68 @@ body{
   .nav-footer{display:none;}
   .main{padding:20px 16px;}
   .topbar{flex-direction:column-reverse;align-items:flex-start;}
-  .clog-item{flex-direction:column;}
-  .clog-img{width:100%;}
 }
+/* ============ 深色模式（prefers-color-scheme 自动切换背景/玻璃/文字明暗） ============ */
+@media (prefers-color-scheme: dark){
+  :root{
+    --t1:rgba(238,242,255,1);
+    --t2:rgba(238,242,255,.96);
+    --t3:rgba(238,242,255,.92);
+    --a1:#79d7c2;   /* 暗色下薄荷绿提亮 */
+    --a2:#9fd9cb;
+    --a3:#9db9ff;
+    --glass-bg:rgba(14,20,34,.34);
+    --glass-border:rgba(255,255,255,.2);
+    --glass-hi:rgba(255,255,255,.4);
+    --shadow:0 22px 50px rgba(0,0,0,.52);
+  }
+  body{
+    background:
+      radial-gradient(1000px 760px at 14% 10%, rgba(118,148,220,.2), transparent 68%),
+      radial-gradient(900px 700px at 84% 18%, rgba(38,86,158,.17), transparent 70%),
+      radial-gradient(760px 680px at 8% 84%, rgba(22,86,82,.19), transparent 66%),
+      radial-gradient(860px 720px at 90% 82%, rgba(66,50,116,.2), transparent 68%),
+      linear-gradient(145deg, #0a0f20 0%, #0f1a30 46%, #0d1525 100%);
+  }
+  /* 玻璃面板：底色转暗、白描边减淡、高光收敛 */
+  .glass{
+    background:rgba(14,20,34,.28);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.72),
+      inset 0 5px 11px -2px rgba(255,255,255,.22),
+      inset 2px 0 6px -2px rgba(255,255,255,.16),
+      inset -2px 0 6px -2px rgba(255,255,255,.16),
+      inset 4px 0 13px -4px rgba(8,20,50,.4),
+      inset -4px 0 13px -4px rgba(8,20,50,.42),
+      inset 0 -1px 0 rgba(255,255,255,.14),
+      inset 0 -26px 44px -26px rgba(4,14,40,.5),
+      inset 0 12px 34px -16px rgba(255,255,255,.18),
+      0 0 0 1.5px rgba(255,255,255,.18),
+      0 0 0 4px rgba(255,255,255,.04),
+      0 0 14px -2px rgba(120,160,255,.1),
+      0 0 34px -8px rgba(120,160,255,.16),
+      0 1px 2px rgba(0,0,0,.35),
+      0 12px 28px -10px rgba(0,0,0,.4),
+      0 34px 70px -30px rgba(0,0,0,.55);
+  }
+  .glass::after{
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      linear-gradient(180deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.04) 18%, transparent 40%, transparent 55%, rgba(0,10,40,.2) 80%, rgba(0,10,40,.34) 100%),
+      radial-gradient(120% 60% at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+      radial-gradient(90% 55% at 22% 4%, rgba(255,255,255,.07), transparent 62%),
+      radial-gradient(75% 62% at 32% 0%, rgba(255,255,255,.2), transparent 72%),
+      radial-gradient(70% 46% at var(--gx,30%) var(--gy,8%), rgba(255,255,255,.24), rgba(255,255,255,.06) 44%, transparent 70%);
+  }
+  .glass-btn{
+    background:radial-gradient(120% 130% at var(--gx,50%) var(--gy,0%), rgba(255,255,255,.26), rgba(255,255,255,.06) 46%, transparent 74%), rgba(10,16,30,.4);
+    border-color:rgba(255,255,255,.16);
+  }
+  .glass-btn:hover{
+    background:radial-gradient(120% 130% at var(--gx,50%) var(--gy,0%), rgba(255,255,255,.34), rgba(255,255,255,.1) 46%, transparent 74%), rgba(10,16,30,.5);
+  }
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
 }
@@ -695,6 +844,8 @@ body{
 <div class="bg-blob b1"></div>
 <div class="bg-blob b2"></div>
 <div class="bg-blob b3"></div>
+<div class="bg-blob b4"></div>
+<div class="bg-blob b5"></div>
 
 <div class="page">
 
@@ -722,7 +873,7 @@ body{
         时间 <span id="clock">--:--:--</span>
       </div>
       <div class="avatar-wrap">
-        <div class="avatar-frame"><canvas id="avatar-canvas" width="16" height="16"></canvas></div>
+        <div class="avatar-frame"><canvas id="avatar-canvas" width="128" height="128"></canvas></div>
         <div class="avatar-label">ZXH</div>
         <button class="glass-btn avatar-upload-btn" onclick="openUploadAvatar()">&#11014; 上传头像</button>
       </div>
@@ -741,6 +892,7 @@ body{
 <span class="k">标签</span>：<span class="s">"好奇心 × 想象力"</span>
 <span class="k">状态</span>：<span class="s">"☀ 正在加载梦想..."</span>
       </div>
+      <canvas id="hero-glass-canvas" class="glass-canvas" width="420" height="220" aria-hidden="true"></canvas>
       <div class="btn-row">
         <a class="glass-btn" href="#works">进入作品区</a>
         <button class="glass-btn pink" onclick="openContact()">联系我</button>
@@ -775,46 +927,6 @@ body{
       © 2026 <span class="hack" title="">邹忻航</span> · 用心创作每一天<br>
       <span class="hack" onclick="openLogin()" id="secret-entry">管理入口</span>
     </footer>
-
-    <!-- ======== 更新日志 / CHANGELOG ======== -->
-    <section id="changelog" class="changelog">
-      <h2 class="section-title">更新日志 / CHANGELOG</h2>
-      <div class="changelog-list">
-
-        <article class="clog-item glass glass-card">
-          <div class="clog-img"><img src="changelog/v4.png" alt="v4.0 液态玻璃重构"></div>
-          <div class="clog-body">
-            <div class="clog-meta"><span class="clog-ver">v4.0</span><span class="clog-date">2026-10-18</span></div>
-            <p class="clog-desc"><b>液态玻璃重构</b>：主页从赛博朋克像素风整体升级为 Apple Liquid Glass 液态玻璃风格，全新的玻璃面板、柔和渐变壁纸与系统字体排版，并新增本更新日志区块。</p>
-          </div>
-        </article>
-
-        <article class="clog-item glass glass-card">
-          <div class="clog-img"><img src="changelog/v3.png" alt="v3.0 迷你播放器"></div>
-          <div class="clog-body">
-            <div class="clog-meta"><span class="clog-ver">v3.0</span><span class="clog-date">2026-10-16</span></div>
-            <p class="clog-desc"><b>迷你播放器升级</b>：点歌机改造为 120×120 迷你音乐播放器并靠左对齐，与介绍框边缘对齐，同时移除页面中的日文装饰。</p>
-          </div>
-        </article>
-
-        <article class="clog-item glass glass-card">
-          <div class="clog-img"><img src="changelog/v2.png" alt="v2.0 像素冒险"></div>
-          <div class="clog-body">
-            <div class="clog-meta"><span class="clog-ver">v2.0</span><span class="clog-date">2026-10-12</span></div>
-            <p class="clog-desc"><b>像素冒险上线</b>：新增 10 关像素冒险小游戏，支持选关、血条、敌人与金币收集，带来完整的闯关体验。</p>
-          </div>
-        </article>
-
-        <article class="clog-item glass glass-card">
-          <div class="clog-img"><img src="changelog/v1.png" alt="v1.0 初版主页"></div>
-          <div class="clog-body">
-            <div class="clog-meta"><span class="clog-ver">v1.0</span><span class="clog-date">2026-10-01</span></div>
-            <p class="clog-desc"><b>赛博朋克初版主页</b>：完成个人主页第一版，包含作品矩阵、联系我与管理后台，风格为 16-bit 赛博朋克像素风。</p>
-          </div>
-        </article>
-
-      </div>
-    </section>
 
   </main>
 </div>
@@ -880,19 +992,18 @@ body{
         <input type="text" id="adm-wechat" maxlength="30">
       </div>
       <div class="field">
-        <label>头像像素数据（16x16 颜色代码，用逗号分隔，可选）</label>
+        <label>头像数据（256 色，用逗号分隔，可选）</label>
         <textarea id="adm-avatar" rows="3" placeholder="留空则使用默认头像" oninput="renderAdminAvatarPreview()"></textarea>
       </div>
       <div class="field">
-        <label>上传头像 UPLOAD（自动像素风滤镜）</label>
+        <label>上传头像 UPLOAD</label>
         <div class="upload-row">
           <button class="glass-btn" type="button" onclick="document.getElementById('avatar-file').click()">选择图片</button>
-          <label class="px-check"><input type="checkbox" id="avatar-quantize" checked> 柔和量化滤镜</label>
         </div>
         <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
         <div class="upload-preview">
           <canvas id="avatar-preview-canvas" width="256" height="256"></canvas>
-          <div class="upload-hint">16×16 像素化预览 · 点「保存配置」后主页头像同步更新</div>
+          <div class="upload-hint">头像预览 · 点「保存配置」后主页头像同步更新</div>
         </div>
       </div>
       <div class="admin-actions">
@@ -938,62 +1049,108 @@ function persistData(){
 }
 
 /* ============================================================
-   默认 16x16 像素头像（液态玻璃柔和色）
+   默认液态玻璃矢量头像（无像素：圆形玻璃底 + 柔和面部 + 高光）
    ============================================================ */
-function defaultAvatar(){
-  const c = {
-    B:'#0f0c29', P:'#a78bfa', p:'#c4b5fd', U:'#22d3ee', u:'#67e8f9',
-    W:'#ffffff', S:'#f9a8d4', s:'#e0a878', E:'#67e8f9', G:'#a78bfa',
-    N:'#1e293b', Y:'#fde68a'
-  };
-  // 16 行 × 16 列，逐行字符串，'.'=深底
-  const rows = [
-    '................',
-    '....BBBBBBBB....',
-    '...BBBBBBBBBB...',
-    '..BBSSSSSSSSBB..',
-    '..BSSSSSSSSSSB..',
-    '..BSSSSSSSSSSB..',
-    '..BSSSSSSSSSSB..',
-    '..BBSSSSSSSSBB..',
-    '..BBBBSSSSBBBB..',
-    '..BWWBBSSBBWWB..',
-    '..BWWBBSSBBWWB..',
-    '..BBBBBBBBBBBB..',
-    '...BBBBBBBBBB...',
-    '...BBBBBBBBBB...',
-    '..BBBBBBBBBBBB..',
-    '................'
-  ];
-  const out = [];
-  for(const r of rows){
-    for(const ch of r){ out.push(ch === '.' ? c.B : c[ch] || c.B); }
-  }
-  return out.join(',');
+function drawGlassOverlay(ctx, cx, cy, r){
+  // 顶部玻璃高光弧 + 边缘白描边（液态玻璃质感）
+  const g = ctx.createLinearGradient(0, cy - r, 0, cy);
+  g.addColorStop(0, 'rgba(255,255,255,.5)');
+  g.addColorStop(.4, 'rgba(255,255,255,.1)');
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+  ctx.fillStyle = g;
+  ctx.fillRect(cx - r, cy - r, r * 2, r);
+  ctx.strokeStyle = 'rgba(255,255,255,.65)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.restore();
+}
+function drawDefaultGlassAvatar(ctx, size){
+  const cx = size / 2, cy = size / 2, r = size * .48;
+  // 玻璃渐变底（通透蓝绿）
+  const bg = ctx.createLinearGradient(0, 0, 0, size);
+  bg.addColorStop(0, '#a5e3ef');
+  bg.addColorStop(.5, '#7cc7da');
+  bg.addColorStop(1, '#4d8fc7');
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = bg; ctx.fill();
+  // 环境光斑
+  const spot = ctx.createRadialGradient(cx - r * .35, cy - r * .45, 0, cx - r * .35, cy - r * .45, r * .9);
+  spot.addColorStop(0, 'rgba(255,255,255,.34)');
+  spot.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = spot; ctx.fill();
+  // 面部（柔和肤色圆）
+  ctx.beginPath(); ctx.arc(cx, cy + r * .14, r * .58, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,238,224,.94)'; ctx.fill();
+  // 头发（顶部弧线）
+  ctx.beginPath(); ctx.arc(cx, cy + r * .02, r * .56, Math.PI, 0);
+  ctx.fillStyle = 'rgba(52,42,72,.9)'; ctx.fill();
+  // 眼睛（平滑圆点）
+  ctx.fillStyle = 'rgba(35,45,70,.95)';
+  ctx.beginPath(); ctx.arc(cx - r * .22, cy + r * .1, r * .055, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx + r * .22, cy + r * .1, r * .055, 0, Math.PI * 2); ctx.fill();
+  // 腮红
+  ctx.fillStyle = 'rgba(255,150,170,.5)';
+  ctx.beginPath(); ctx.arc(cx - r * .34, cy + r * .3, r * .09, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx + r * .34, cy + r * .3, r * .09, 0, Math.PI * 2); ctx.fill();
+  // 微笑（柔和弧线）
+  ctx.strokeStyle = 'rgba(120,70,80,.85)'; ctx.lineWidth = r * .045; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.arc(cx, cy + r * .3, r * .24, .3, Math.PI - .3); ctx.stroke();
+  // 玻璃高光层
+  drawGlassOverlay(ctx, cx, cy, r);
 }
 
 /* ============================================================
-   渲染：像素头像
+   渲染：头像（dataURL 图片 / 旧像素数据平滑兼容 / 矢量默认）
    ============================================================ */
 function renderAvatar(){
   const cv = document.getElementById('avatar-canvas');
   const ctx = cv.getContext('2d');
-  const colors = (DATA.avatar && DATA.avatar.split(',').length === 256)
-    ? DATA.avatar.split(',')
-    : defaultAvatar().split(',');
-  ctx.clearRect(0,0,16,16);
-  for(let y=0;y<16;y++){
-    for(let x=0;x<16;x++){
-      ctx.fillStyle = colors[y*16+x] || '#000';
-      ctx.fillRect(x,y,1,1);
-    }
+  const size = 128, cx = size / 2, cy = size / 2, r = size * .48;
+  ctx.clearRect(0, 0, size, size);
+  const raw = DATA.avatar || '';
+  if(raw.indexOf('data:') === 0){
+    // 新格式：高清图片 dataURL
+    const img = new Image();
+    img.onload = ()=>{
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+      ctx.drawImage(img, 0, 0, size, size);
+      ctx.restore();
+      drawGlassOverlay(ctx, cx, cy, r);
+    };
+    img.src = raw;
+    return;
   }
+  if(raw.split(',').length === 256){
+    // 旧 16x16 像素数据：平滑放大 + 圆形遮罩，消除硬马赛克
+    const tmp = document.createElement('canvas');
+    tmp.width = 16; tmp.height = 16;
+    const tctx = tmp.getContext('2d');
+    const colors = raw.split(',');
+    for(let y=0;y<16;y++){
+      for(let x=0;x<16;x++){
+        tctx.fillStyle = colors[y*16+x] || '#0f0c29';
+        tctx.fillRect(x,y,1,1);
+      }
+    }
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(tmp, 0, 0, 16, 16, 2, 2, 124, 124);
+    ctx.restore();
+    drawGlassOverlay(ctx, cx, cy, r);
+    return;
+  }
+  // 空值：液态玻璃矢量默认头像
+  drawDefaultGlassAvatar(ctx, size);
 }
 
 /* ============================================================
    渲染：简介（支持占位符与自动换行）
    ============================================================ */
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/`/g,'&#96;'); }
 
 function renderProfile(){
   const name = esc(DATA.name), age = esc(DATA.age), loc = esc(DATA.location);
@@ -1237,7 +1394,7 @@ function showToast(msg){
 }
 
 /* ============================================================
-   头像上传：像素风滤镜（降采样 16x16 + 柔和量化）
+   头像上传
    ============================================================ */
 let pendingUpload = false;
 
@@ -1251,19 +1408,8 @@ function openUploadAvatar(){
   }
 }
 
-const NEON_PALETTE = ['#0f0c29','#1e1b4b','#312e81','#4c1d95','#6d28d9','#a78bfa','#c4b5fd','#22d3ee','#67e8f9','#f0abfc','#f9a8d4','#ffffff','#e8e8ff','#fde68a','#94a3b8','#1e293b'];
-
 function rgbToHex(r,g,b){
   return '#' + [r,g,b].map(v=>Math.max(0,Math.min(255,v|0)).toString(16).padStart(2,'0')).join('');
-}
-function nearestNeon(r,g,b){
-  let best = NEON_PALETTE[0], bestD = Infinity;
-  for(const c of NEON_PALETTE){
-    const R = parseInt(c.slice(1,3),16), G = parseInt(c.slice(3,5),16), B = parseInt(c.slice(5,7),16);
-    const d = (R-r)*(R-r) + (G-g)*(G-g) + (B-b)*(B-b);
-    if(d < bestD){ bestD = d; best = c; }
-  }
-  return best;
 }
 function handleAvatarUpload(ev){
   const file = ev.target.files[0];
@@ -1271,23 +1417,19 @@ function handleAvatarUpload(ev){
   const img = new Image();
   const url = URL.createObjectURL(file);
   img.onload = ()=>{
-    const size = 16;
+    const size = 256;
     const cv = document.createElement('canvas');
     cv.width = size; cv.height = size;
     const ctx = cv.getContext('2d');
     const min = Math.min(img.width, img.height);
     const sx = (img.width - min)/2, sy = (img.height - min)/2;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
-    const data = ctx.getImageData(0,0,size,size).data;
-    const quantize = document.getElementById('avatar-quantize').checked;
-    const colors = [];
-    for(let i=0;i<size*size;i++){
-      const r = data[i*4], g = data[i*4+1], b = data[i*4+2];
-      colors.push(quantize ? nearestNeon(r,g,b) : rgbToHex(r,g,b));
-    }
-    document.getElementById('adm-avatar').value = colors.join(',');
+    // 高清 JPEG dataURL（替代旧 16x16 像素数据，杜绝马赛克）
+    document.getElementById('adm-avatar').value = cv.toDataURL('image/jpeg', .92);
     renderAdminAvatarPreview();
-    showToast('// 像素头像已生成，点击保存生效 //');
+    showToast('// 头像已生成，点击保存生效 //');
     URL.revokeObjectURL(url);
   };
   img.onerror = ()=>{ showToast('// 图片读取失败 //'); URL.revokeObjectURL(url); };
@@ -1297,16 +1439,42 @@ function renderAdminAvatarPreview(){
   const cv = document.getElementById('avatar-preview-canvas');
   if(!cv) return;
   const ctx = cv.getContext('2d');
+  const size = 256, cx = size / 2, cy = size / 2, r = size * .48;
+  ctx.clearRect(0, 0, size, size);
   const raw = document.getElementById('adm-avatar').value.trim();
-  const colors = raw ? raw.split(',') : defaultAvatar().split(',');
-  ctx.clearRect(0,0,256,256);
-  const cell = 16;
-  for(let y=0;y<16;y++){
-    for(let x=0;x<16;x++){
-      ctx.fillStyle = colors[y*16+x] || '#000';
-      ctx.fillRect(x*cell, y*cell, cell, cell);
-    }
+  if(raw.indexOf('data:') === 0){
+    const img = new Image();
+    img.onload = ()=>{
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+      ctx.drawImage(img, 0, 0, size, size);
+      ctx.restore();
+      drawGlassOverlay(ctx, cx, cy, r);
+    };
+    img.src = raw;
+    return;
   }
+  if(raw && raw.split(',').length === 256){
+    const tmp = document.createElement('canvas');
+    tmp.width = 16; tmp.height = 16;
+    const tctx = tmp.getContext('2d');
+    const colors = raw.split(',');
+    for(let y=0;y<16;y++){
+      for(let x=0;x<16;x++){
+        tctx.fillStyle = colors[y*16+x] || '#0f0c29';
+        tctx.fillRect(x,y,1,1);
+      }
+    }
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(tmp, 0, 0, 16, 16, 4, 4, size - 8, size - 8);
+    ctx.restore();
+    drawGlassOverlay(ctx, cx, cy, r);
+    return;
+  }
+  drawDefaultGlassAvatar(ctx, size);
 }
 
 /* 键盘：Esc 关闭；回车登录 */
@@ -1384,6 +1552,284 @@ renderProfile();
 renderAvatar();
 renderWorks();
 initPlayer();
+
+/* ============================================================
+   Liquid Glass 增强模块（像素级逼近 Apple Liquid Glass）
+   A) 光标/触摸高光跟随（--gx/--gy，GGX 微表面高光位置）
+   B) 滚动视差（背景光斑分层位移，GPU 友好：transform/变量）
+   C) WebGL 玻璃渲染器（hero-code 主档案卡）：
+      动态折射扭曲 / 环境反射探针 / GGX BRDF / SSS / Lambert / RGB 色散
+   浏览器限制注明：WebGL canvas 无法采样其下方真实 DOM 背景，
+   采用「程序化背景色块 + 半透明叠加」逼近折射；其余玻璃面板
+   （.glass 等）由 CSS 增强层完成（backdrop-filter 实时模糊 +
+   SVG feTurbulence 噪点 + 多层内倒角 + 菲涅尔高光）。
+   GPU 友好：单全屏 quad 一次绘制、transform/opacity 合成、
+   will-change、DPR 上限 2、prefers-reduced-motion 时静态渲染。
+   ============================================================ */
+(function(){
+  'use strict';
+
+  /* ---------- A) 光标/触摸高光跟随 ---------- */
+  function trackGlassGlints(){
+    var sel = '.glass-btn,.hero-code,.glass,.work-card';
+    function apply(e){
+      var el = e.target && e.target.closest ? e.target.closest(sel) : null;
+      if(!el) return;
+      var r = el.getBoundingClientRect();
+      if(!r.width || !r.height) return;
+      var px = ((e.clientX - r.left) / r.width) * 100;
+      var py = ((e.clientY - r.top) / r.height) * 100;
+      el.style.setProperty('--gx', px.toFixed(1) + '%');
+      el.style.setProperty('--gy', py.toFixed(1) + '%');
+    }
+    window.addEventListener('pointermove', apply, {passive:true});
+    window.addEventListener('pointerdown', apply, {passive:true});
+  }
+  trackGlassGlints();
+
+  /* ---------- B) 滚动视差（背景光斑分层） ---------- */
+  function initScrollParallax(){
+    var blobs = [document.querySelector('.bg-blob.b1'), document.querySelector('.bg-blob.b2'),
+                 document.querySelector('.bg-blob.b3'), document.querySelector('.bg-blob.b4'),
+                 document.querySelector('.bg-blob.b5')];
+    var factors = [0.06, 0.10, 0.14, 0.04, 0.02];  // 越靠后视差越弱（b5 主光源近不动）
+    var scrolled = false, ticking = false;
+    window.addEventListener('scroll', function(){ scrolled = true; }, {passive:true});
+    (function raf(){
+      if(scrolled){
+        scrolled = false;
+        if(!ticking){
+          ticking = true;
+          requestAnimationFrame(function(){
+            var y = window.scrollY || 0;
+            for(var i = 0; i < blobs.length; i++){
+              if(!blobs[i]) continue;
+              blobs[i].style.setProperty('--px', (y * factors[i]).toFixed(1) + 'px');
+              blobs[i].style.setProperty('--py', (y * factors[i] * 0.35).toFixed(1) + 'px');
+            }
+            ticking = false;
+          });
+        }
+      }
+      requestAnimationFrame(raf);
+    })();
+  }
+  initScrollParallax();
+
+  /* ---------- C) WebGL 玻璃渲染器 ---------- */
+  var canvas = document.getElementById('hero-glass-canvas');
+  if(!canvas) return;
+  var heroEl = document.getElementById('profile-code');
+  if(!heroEl) return;
+
+  var reducedMq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var darkMq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var DPR = 1, W = 2, H = 2;
+  var gl = null, prog = null, u = {}, ext = null, inited = false;
+  var t0 = performance.now(), running = false;
+  var mouse = {x:.5, y:.5, ox:.5, oy:.5, hover:0, tHover:0, glow:0, tGlow:0};
+
+  var VS = 'attribute vec2 aPos; varying vec2 vUv; void main(){ vUv=aPos*0.5+0.5; gl_Position=vec4(aPos,0.0,1.0); }';
+  var FS = [
+    'precision mediump float;',
+    'varying vec2 vUv;',
+    'uniform vec2 uRes;', 'uniform float uTime;', 'uniform vec2 uMouse;',
+    'uniform float uHover;', 'uniform float uGlow;', 'uniform float uDark;', 'uniform float uRadius;',
+    'float sdRoundRect(vec2 p, vec2 b, float r){ vec2 q=abs(p)-b+r; return length(max(q,0.0))-r; }',
+    'vec3 fakeBG(vec2 p){',
+    '  vec2 q=p*0.0011;',
+    '  float n=sin(q.x*1.7+uTime*.05)*cos(q.y*1.3-uTime*.043)*.5+.5;',
+    '  vec3 c=mix(vec3(.78,.88,1.0), vec3(.62,.95,.86), smoothstep(.4,.75,n));',
+    '  c=mix(c, vec3(.30,.42,.75), smoothstep(.55,.92,sin(q.y*1.2+uTime*.02)*.5+.5));',
+    '  return c;',
+    '}',
+    'vec3 envProbe(vec3 R){',
+    '  vec3 top=vec3(.85,.93,1.0), bottom=vec3(.35,.48,.8), mid=vec3(.6,.75,.95);',
+    '  float t=clamp(R.y*.5+.5,0.,1.);',
+    '  vec3 c=mix(bottom, top, t);',
+    '  c=mix(c, vec3(.2,.3,.6), pow(1.-clamp(R.y,0.,1.),2.)*.35);',
+    '  float s=sin(R.x*3.+1.7)*cos(R.z*2.3+uTime*.12);',
+    '  c+=vec3(1.,.97,.9)*pow(max(s,0.),6.)*.18;',
+    '  return c;',
+    '}',
+    'void main(){',
+    '  vec2 uv=vUv;',
+    '  vec2 p=(uv-.5)*uRes;',
+    '  float rad=uRadius;',
+    '  vec2 halfB=(uRes*.5)-rad;',
+    '  float dd=sdRoundRect(p, halfB, rad);',
+    '  float edge=smoothstep(1.6,.6,abs(dd));',
+    '  float bodyMask=smoothstep(2.2,.4,dd);',
+    '  vec2 g=vec2(dFdx(dd), dFdy(dd));',
+    '  vec3 N=normalize(vec3(-g*1.4, 1.0));',
+    '  vec2 disturb=vec2(sin(p.y*.012+uTime*.5)*.5+sin(uTime*.23)*.6, cos(p.x*.014+uTime*.42)*.5+cos(uTime*.31)*.6);',
+    '  disturb*=edge*(3.0+uHover*4.0+uGlow*2.0);',
+    '  vec2 refrUV=uv + disturb/uRes + N.xy*1.2/uRes;',
+    '  float ca=edge*(.6+uGlow*.8);',
+    '  vec3 bgc;',
+    '  bgc.r=fakeBG(vec2(refrUV.x+ca*1.6, refrUV.y)*uRes).r;',
+    '  bgc.g=fakeBG(vec2(refrUV.x, refrUV.y)*uRes).g;',
+    '  bgc.b=fakeBG(vec2(refrUV.x-ca*1.6, refrUV.y)*uRes).b;',
+    '  vec3 refractBG=mix(fakeBG(p), bgc, edge);',
+    '  vec3 V=vec3(0.,0.,1.);',
+    '  vec3 R=reflect(-V, N);',
+    '  vec3 env=envProbe(R);',
+    '  float fres=pow(1.-max(dot(N,V),0.),3.);',
+    '  fres*=edge*2.2+.1;',
+    '  vec3 L=normalize(vec3((uMouse.x-.5)*2., (uMouse.y-.5)*2., .9+uGlow));',
+    '  vec3 Hv=normalize(L+V);',
+    '  float NdH=max(dot(N,Hv),0.);',
+    '  float alphaGGX=.22; float a2=alphaGGX*alphaGGX;',
+    '  float D=a2/(3.14159*pow(NdH*NdH*(a2-1.)+1., 2.));',
+    '  float Gs=1./(pow(max(dot(N,V),0.),.5)+.4);',
+    '  vec3 F0=vec3(.04);',
+    '  vec3 F=F0+(vec3(1.)-F0)*pow(1.-NdH,5.);',
+    '  vec3 spec=F*D*Gs*.9*(.5+uGlow*1.2);',
+    '  float center=pow(1.-clamp((dd+rad)/(rad*1.4),0.,1.),2.2);',
+    '  vec3 sssColor=vec3(.86,.93,1.0)*(center*.34)*mix(1.,.6,uDark);',
+    '  float diff=max(dot(N,L),0.);',
+    '  vec3 lam=vec3(.85,.9,1.0)*diff*.16;',
+    '  float topLine=smoothstep(3.5,.5,p.y+uRes.y*.5-1.2);',
+    '  vec3 hi=vec3(1.)*topLine*.7;',
+    '  float botShade=smoothstep(0.,-6.,p.y-uRes.y*.5+6.)*.25;',
+    '  float bevelL=smoothstep(2.5,.2,p.x+uRes.x*.5-1.5);',
+    '  float bevelT=smoothstep(2.5,.2,p.y+uRes.y*.5-1.5);',
+    '  vec3 bevel=(vec3(.9,.95,1.)*(bevelL*.14+bevelT*.18));',
+    '  float grain=fract(sin(dot(p*1.7+vec2(uTime*.001), vec2(12.9898,78.233)))*43758.5453)-.5;',
+    '  vec3 grainC=vec3(.5)+grain*.08*edge;',
+    '  vec3 col=refractBG*.62 + env*fres*.55 + spec + sssColor + lam + hi + bevel + botShade + grainC;',
+    '  float alpha=bodyMask*.68 + fres*.5;',
+    '  alpha=clamp(alpha,0.,1.);',
+    '  alpha*=smoothstep(-1.2,-.2,-dd);',
+    '  col=mix(col, col*vec3(.72), uDark*.45);',
+    '  gl_FragColor=vec4(col, alpha);',
+    '}'
+  ].join('\n');
+
+  function compile(type, src){
+    var sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
+      console.warn('[glass] shader compile failed:', gl.getShaderInfoLog(sh));
+      gl.deleteShader(sh); return null;
+    }
+    return sh;
+  }
+  function initGL(){
+    if(inited) return;
+    gl = canvas.getContext('webgl', {alpha:true, antialias:false, premultipliedAlpha:true, depth:false, stencil:false, preserveDrawingBuffer:false})
+      || canvas.getContext('experimental-webgl', {alpha:true});
+    if(!gl){ console.warn('[glass] WebGL unsupported, fallback to CSS-only glass.'); return; }
+    ext = gl.getExtension('OES_standard_derivatives');
+    if(!ext){ console.warn('[glass] OES_standard_derivatives missing, fallback to CSS-only glass.'); gl=null; return; }
+    var vs = compile(gl.VERTEX_SHADER, VS), fs = compile(gl.FRAGMENT_SHADER, FS);
+    if(!vs || !fs) return;
+    prog = gl.createProgram();
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+    gl.bindAttribLocation(prog, 0, 'aPos');
+    gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog, gl.LINK_STATUS)){ console.warn('[glass] link failed'); return; }
+    gl.useProgram(prog);
+    u.res = gl.getUniformLocation(prog, 'uRes');
+    u.time = gl.getUniformLocation(prog, 'uTime');
+    u.mouse = gl.getUniformLocation(prog, 'uMouse');
+    u.hover = gl.getUniformLocation(prog, 'uHover');
+    u.glow = gl.getUniformLocation(prog, 'uGlow');
+    u.dark = gl.getUniformLocation(prog, 'uDark');
+    u.radius = gl.getUniformLocation(prog, 'uRadius');
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    gl.clearColor(0,0,0,0);
+    inited = true;
+  }
+  function resize(){
+    if(!heroEl) return;
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var r = heroEl.getBoundingClientRect();
+    var pr = (canvas.offsetParent || document.body).getBoundingClientRect();
+    canvas.style.left = (r.left - pr.left) + 'px';
+    canvas.style.top = (r.top - pr.top) + 'px';
+    canvas.style.width = r.width + 'px';
+    canvas.style.height = r.height + 'px';
+    W = Math.max(2, Math.round(r.width * DPR));
+    H = Math.max(2, Math.round(r.height * DPR));
+    if(canvas.width !== W) canvas.width = W;
+    if(canvas.height !== H) canvas.height = H;
+    if(gl) gl.viewport(0, 0, W, H);
+  }
+  function frame(){
+    if(!running || !gl || !prog) return;
+    var t = (performance.now() - t0) / 1000;
+    mouse.x += (mouse.ox - mouse.x) * .08;
+    mouse.y += (mouse.oy - mouse.y) * .08;
+    mouse.hover += (mouse.tHover - mouse.hover) * .06;
+    mouse.glow += (mouse.tGlow - mouse.glow) * .05;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(prog);
+    gl.uniform2f(u.res, W, H);
+    gl.uniform1f(u.time, t);
+    gl.uniform2f(u.mouse, mouse.x, mouse.y);
+    gl.uniform1f(u.hover, mouse.hover);
+    gl.uniform1f(u.glow, mouse.glow);
+    gl.uniform1f(u.dark, (darkMq && darkMq.matches) ? 1 : 0);
+    gl.uniform1f(u.radius, 22);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(frame);
+  }
+  function setHover(v){ mouse.tHover = v; }
+  function setGlow(v){ mouse.tGlow = v; }
+
+  function bindPointer(){
+    function onMove(e){
+      var r = heroEl.getBoundingClientRect();
+      if(!r.width || !r.height) return;
+      mouse.ox = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+      mouse.oy = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+      var dx = Math.min(mouse.ox, 1 - mouse.ox), dy = Math.min(mouse.oy, 1 - mouse.oy);
+      setGlow(Math.max(0, 1 - Math.min(dx, dy) * 1.6));
+    }
+    function onOver(e){
+      var el = e.target && e.target.closest ? e.target.closest('.hero-code') : null;
+      if(el){ setHover(1); setGlow(1); }
+    }
+    function onOut(e){
+      var el = e.target && e.target.closest ? e.target.closest('.hero-code') : null;
+      if(el){ setHover(0); setGlow(0); }
+    }
+    window.addEventListener('pointermove', onMove, {passive:true});
+    window.addEventListener('pointerover', onOver, {passive:true});
+    window.addEventListener('pointerout', onOut, {passive:true});
+  }
+  function start(){
+    initGL();
+    if(!gl) return;   // WebGL 不可用：CSS 增强层已保证玻璃观感
+    resize();
+    bindPointer();
+    window.addEventListener('resize', resize, {passive:true});
+    if(darkMq) darkMq.addEventListener ? darkMq.addEventListener('change', resize) : darkMq.addListener(resize);
+    running = !(reducedMq && reducedMq.matches);
+    if(running){
+      requestAnimationFrame(frame);
+    }else{
+      // 用户偏好减少动效：仅渲染一帧静态玻璃
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.useProgram(prog);
+      gl.uniform2f(u.res, W, H);
+      gl.uniform1f(u.time, 0);
+      gl.uniform2f(u.mouse, .5, .5);
+      gl.uniform1f(u.hover, 0);
+      gl.uniform1f(u.glow, 0);
+      gl.uniform1f(u.dark, (darkMq && darkMq.matches) ? 1 : 0);
+      gl.uniform1f(u.radius, 22);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+  }
+  start();
+})();
 </script>
 </body>
 </html>
