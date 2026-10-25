@@ -1922,7 +1922,7 @@ function cmRich(text){
   return cmEscape(text).split('\n').map(l => cmUrlify(l)).join('<br>');
 }
 async function cmFetch(url, opt){
-  const res = await fetch(url, opt);
+  const res = await fetch(url, { ...(opt||{}), cache: 'no-store' });
   return res.json();
 }
 async function cmLoad(){
