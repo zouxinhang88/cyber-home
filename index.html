@@ -10,7 +10,7 @@
 <!-- CSP 说明：页面为单文件内联架构（内联 <style>/<script>/onclick），必须保留 'unsafe-inline' 才能保住全部功能；
      其余均按最严格配置（禁 object/frame 嵌入、锁定 base-uri/form-action、强制 HTTPS 升级）。
      若日后把 JS/CSS 抽离为外部文件，可删除 'unsafe-inline' 收紧为 script-src 'self'; style-src 'self'。 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
 <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), notifications=()">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -562,6 +562,52 @@ backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
   text-shadow:0 1px 2px rgba(6,24,55,.95), 0 0 5px rgba(8,30,65,.85);
 }
 
+/* ============ 评论区 ============ */
+.comments{
+  margin:26px auto 30px;max-width:860px;padding:22px 24px 8px;
+}
+.comments-head{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.comments-title{font-size:20px;font-weight:700;letter-spacing:1px;}
+.comments-sub{font-size:12px;color:var(--t3);letter-spacing:.5px;}
+.comments-form{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.cm-input{
+  width:100%;padding:10px 14px;border-radius:14px;font-size:14px;
+  background:rgba(255,255,255,.12);color:var(--t1);
+  border:1px solid rgba(255,255,255,.28);
+  outline:none;font-family:var(--font);resize:vertical;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  transition:border-color .2s, background .2s;
+}
+.cm-input::placeholder{color:rgba(255,255,255,.6);}
+.cm-input:focus{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.16);}
+.cm-actions{display:flex;align-items:center;gap:12px;}
+.comments-tip{font-size:12px;color:var(--t3);opacity:.85;}
+.comments-list{display:flex;flex-direction:column;gap:12px;padding-bottom:14px;}
+.cm-item{
+  border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:12px 14px;
+  background:rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.cm-item.cm-reply{margin-left:34px;background:rgba(255,255,255,.04);}
+.cm-head{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.cm-nick{font-weight:700;font-size:14px;color:var(--t2);}
+.cm-time{font-size:11px;color:var(--t3);}
+.cm-del{
+  margin-left:auto;font-size:11px;color:rgba(255,255,255,.55);cursor:pointer;
+  border:1px solid rgba(255,255,255,.22);border-radius:8px;padding:1px 8px;background:rgba(255,255,255,.05);
+}
+.cm-del:hover{color:#ff9aa8;border-color:rgba(255,255,255,.4);}
+.cm-body{font-size:14px;line-height:1.75;color:var(--t1);word-break:break-word;}
+.cm-body a.cm-link{color:var(--a3);text-decoration:underline;}
+.cm-body .cm-media{max-width:100%;max-height:360px;border-radius:12px;display:block;margin-top:6px;}
+.cm-reply-btn{
+  margin-top:6px;font-size:12px;color:var(--t3);cursor:pointer;background:none;border:none;padding:0;
+}
+.cm-reply-btn:hover{color:#fff;}
+.cm-reply-form{margin-top:8px;display:none;flex-direction:column;gap:8px;}
+.cm-reply-form.show{display:flex;}
+.cm-empty{text-align:center;color:var(--t3);font-size:13px;padding:16px 0;}
+
 /* ============ 管理后台 ============ */
 .admin-overlay{
   position:fixed;inset:0;z-index:100;display:none;
@@ -927,6 +973,23 @@ backdrop-filter:blur(18px) saturate(200%) brightness(1.12) contrast(1.02);
       © 2026 <span class="hack" title="">邹忻航</span> · 用心创作每一天<br>
       <span class="hack" onclick="openLogin()" id="secret-entry">管理入口</span>
     </footer>
+
+    <!-- ============ 评论区（Cloudflare Pages Functions + KV） ============ -->
+    <section class="comments glass" id="comments">
+      <div class="comments-head">
+        <h2 class="comments-title">留言板</h2>
+        <span class="comments-sub">欢迎留下你的话 · 支持文字 / emoji / 链接 / 图片 / 视频</span>
+      </div>
+      <div class="comments-form">
+        <input id="cm-nick" class="cm-input" type="text" maxlength="24" placeholder="你的昵称（留空为匿名）">
+        <textarea id="cm-text" class="cm-input" rows="3" maxlength="2000" placeholder="写点什么… 贴 https:// 链接可自动识别图片 / 视频 / 网页"></textarea>
+        <div class="cm-actions">
+          <button class="glass-btn" id="cm-submit" onclick="cmSubmit()">发布</button>
+          <span id="cm-tip" class="comments-tip"></span>
+        </div>
+      </div>
+      <div id="cm-list" class="comments-list"></div>
+    </section>
 
   </main>
 </div>
@@ -1830,6 +1893,138 @@ initPlayer();
   }
   start();
 })();
+</script>
+<script>
+/* ============ 评论区（Cloudflare Pages Functions + KV） ============ */
+const CM_API = '/api/comment';
+let cmComments = [];
+
+function cmEscape(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function cmFmtTime(ts){
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2,'0');
+  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function cmUrlify(line){
+  const urlRe = /(https?:\/\/[^\s<>"']+)/gi;
+  return line.replace(urlRe, m => {
+    const imgRe = /\.(png|jpe?g|gif|webp|avif|bmp)(\?[^\s]*)?$/i;
+    const vidRe = /\.(mp4|webm|mov|ogg)(\?[^\s]*)?$/i;
+    if(imgRe.test(m)) return '<img class="cm-media" loading="lazy" src="' + m + '" alt="图片">';
+    if(vidRe.test(m)) return '<video class="cm-media" controls preload="metadata" src="' + m + '"></video>';
+    // 无扩展名链接：先当图片试，失败则回退为链接
+    return '<img class="cm-media cm-img-fallback" loading="lazy" src="' + m + '" alt="图片" onerror="this.outerHTML=\'<a class=\'cm-link\' href=\'\' + this.src + \'\' target=\'_blank\' rel=\'noopener noreferrer\'>' + m + '</a>\'">';
+  });
+}
+function cmRich(text){
+  return cmEscape(text).split('\n').map(l => cmUrlify(l)).join('<br>');
+}
+async function cmFetch(url, opt){
+  const res = await fetch(url, opt);
+  return res.json();
+}
+async function cmLoad(){
+  try{
+    const data = await cmFetch(CM_API);
+    cmComments = data.comments || [];
+    cmRender();
+  }catch(e){
+    document.getElementById('cm-list').innerHTML = '<div class="cm-empty">留言加载失败，请稍后再试</div>';
+  }
+}
+function cmChildren(id){
+  return cmComments.filter(c => c.parentId === id).sort((a,b)=>a.ts-b.ts);
+}
+function cmItemHTML(c){
+  const kids = cmChildren(c.id);
+  const del = '<button class="cm-del" onclick="cmDelete(\'' + c.id + '\')" title="删除（管理员）">×</button>';
+  const replyBtn = '<button class="cm-reply-btn" onclick="cmReply(\'' + c.id + '\')">回复</button>';
+  const replyForm =
+    '<div class="cm-reply-form" id="cm-rf-' + c.id + '">' +
+      '<input class="cm-input" id="cm-rn-' + c.id + '" maxlength="24" placeholder="你的昵称（留空为匿名）">' +
+      '<textarea class="cm-input" id="cm-rt-' + c.id + '" rows="2" maxlength="2000" placeholder="回复…"></textarea>' +
+      '<div class="cm-actions"><button class="glass-btn" onclick="cmReplySubmit(\'' + c.id + '\')">回复发布</button><span class="comments-tip"></span></div>' +
+    '</div>';
+  let html =
+    '<div class="cm-item' + (c.parentId ? ' cm-reply' : '') + '">' +
+      '<div class="cm-head"><span class="cm-nick">' + cmEscape(c.nick) + '</span>' +
+      '<span class="cm-time">' + cmFmtTime(c.ts) + '</span>' + del + '</div>' +
+      '<div class="cm-body">' + cmRich(c.text) + '</div>' + replyBtn + replyForm;
+  if(kids.length){
+    html += '<div class="cm-kids">' + kids.map(cmItemHTML).join('') + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+function cmRender(){
+  const root = document.getElementById('cm-list');
+  const tops = cmComments.filter(c => !c.parentId).sort((a,b)=>b.ts-a.ts);
+  if(!tops.length){
+    root.innerHTML = '<div class="cm-empty">还没有留言，来抢沙发吧 🛋️</div>';
+    return;
+  }
+  root.innerHTML = tops.map(cmItemHTML).join('');
+}
+async function cmSubmit(){
+  const nick = document.getElementById('cm-nick').value.trim();
+  const text = document.getElementById('cm-text').value.trim();
+  if(!text){ cmTip('内容不能为空'); return; }
+  const btn = document.getElementById('cm-submit');
+  btn.disabled = true;
+  try{
+    const data = await cmFetch(CM_API, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({nick: nick, text: text})
+    });
+    if(data.ok){
+      document.getElementById('cm-text').value = '';
+      cmTip('发布成功');
+      await cmLoad();
+    }else{
+      cmTip(data.error || '发布失败');
+    }
+  }catch(e){ cmTip('网络错误，请稍后再试'); }
+  btn.disabled = false;
+}
+function cmReply(id){
+  const f = document.getElementById('cm-rf-' + id);
+  f.classList.toggle('show');
+}
+async function cmReplySubmit(id){
+  const nick = document.getElementById('cm-rn-' + id).value.trim();
+  const text = document.getElementById('cm-rt-' + id).value.trim();
+  if(!text){ cmTip('回复内容不能为空'); return; }
+  try{
+    const data = await cmFetch(CM_API, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({parentId: id, nick: nick, text: text})
+    });
+    if(data.ok){
+      document.getElementById('cm-rt-' + id).value = '';
+      document.getElementById('cm-rf-' + id).classList.remove('show');
+      await cmLoad();
+    }else{
+      cmTip(data.error || '回复失败');
+    }
+  }catch(e){ cmTip('网络错误，请稍后再试'); }
+}
+async function cmDelete(id){
+  const pwd = prompt('管理员删除：请输入管理密码');
+  if(pwd === null || pwd === '') return;
+  try{
+    const data = await cmFetch(CM_API + '?id=' + encodeURIComponent(id) + '&admin=' + encodeURIComponent(pwd));
+    if(data.ok){ cmTip('已删除'); await cmLoad(); }
+    else{ cmTip(data.error || '删除失败'); }
+  }catch(e){ cmTip('网络错误，请稍后再试'); }
+}
+function cmTip(msg){
+  const t = document.getElementById('cm-tip');
+  t.textContent = msg;
+  setTimeout(()=>{ t.textContent = ''; }, 2500);
+}
+cmLoad();
 </script>
 </body>
 </html>
