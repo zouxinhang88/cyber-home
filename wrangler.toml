@@ -1,0 +1,6 @@
+name = "cyber-home"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "COMMENTS"
+id = "b87cf2f0a73a48b5bfb701f6d448ef90"
