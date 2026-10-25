@@ -2014,7 +2014,7 @@ async function cmDelete(id){
   const pwd = prompt('管理员删除：请输入管理密码');
   if(pwd === null || pwd === '') return;
   try{
-    const data = await cmFetch(CM_API + '?id=' + encodeURIComponent(id) + '&admin=' + encodeURIComponent(pwd));
+    const data = await cmFetch(CM_API + '?id=' + encodeURIComponent(id) + '&admin=' + encodeURIComponent(pwd), { method: 'DELETE' });
     if(data.ok){ cmTip('已删除'); await cmLoad(); }
     else{ cmTip(data.error || '删除失败'); }
   }catch(e){ cmTip('网络错误，请稍后再试'); }
